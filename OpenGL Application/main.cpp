@@ -9,6 +9,8 @@
 
 using uint = unsigned int;
 
+void PrintErrorLog(uint ID);
+
 int main()
 {
 #pragma region Initialise
@@ -37,35 +39,83 @@ int main()
 	auto major = ogl_GetMajorVersion();
 	auto minor = ogl_GetMinorVersion();
 	printf("GL: %i.%i.\n", major, minor);
+
+	glEnable(GL_DEPTH_TEST);
 #pragma endregion
 
 	// Mesh Data
-	glm::vec3 verticies[] =
+	glm::vec3 vertices[] =
 	{
-		glm::vec3(-0.5f,  0.5f, 0.0f),
-		glm::vec3(-0.5f, -0.5f, 0.0f),
-		glm::vec3(0.5f,   0.5f, 0.0f),
-		glm::vec3(0.5f,  -0.5f, 0.0f)
+	glm::vec3(-0.5f, -0.5f, -0.5f),
+	glm::vec3( 0.5f, -0.5f, -0.5f),
+	glm::vec3( 0.5f,  0.5f, -0.5f),
+	glm::vec3( 0.5f,  0.5f, -0.5f),
+	glm::vec3(-0.5f,  0.5f, -0.5f),
+	glm::vec3(-0.5f, -0.5f, -0.5f),
+
+	glm::vec3(-0.5f, -0.5f, 0.5f),
+	glm::vec3( 0.5f, -0.5f, 0.5f),
+	glm::vec3( 0.5f,  0.5f, 0.5f),
+	glm::vec3( 0.5f,  0.5f, 0.5f),
+	glm::vec3(-0.5f,  0.5f, 0.5f),
+	glm::vec3(-0.5f, -0.5f, 0.5f),
+
+	glm::vec3(-0.5f,  0.5f, 0.5f),
+	glm::vec3(-0.5f,  0.5f, -0.5f),
+	glm::vec3(-0.5f, -0.5f, -0.5f),
+	glm::vec3(-0.5f, -0.5f, -0.5f),
+	glm::vec3(-0.5f, -0.5f, 0.5f),
+	glm::vec3(-0.5f,  0.5f, 0.5f),
+
+	glm::vec3( 0.5f,  0.5f, 0.5f),
+	glm::vec3( 0.5f,  0.5f, -0.5f),
+	glm::vec3( 0.5f, -0.5f, -0.5f),
+	glm::vec3( 0.5f, -0.5f, -0.5f),
+	glm::vec3( 0.5f, -0.5f, 0.5f),
+	glm::vec3( 0.5f,  0.5f, 0.5f),
+
+	glm::vec3(-0.5f, -0.5f, -0.5f),
+	glm::vec3( 0.5f, -0.5f, -0.5f),
+	glm::vec3( 0.5f, -0.5f, 0.5f),
+	glm::vec3( 0.5f, -0.5f, 0.5f),
+	glm::vec3(-0.5f, -0.5f, 0.5f),
+	glm::vec3(-0.5f, -0.5f, -0.5f),
+
+	glm::vec3(-0.5f,  0.5f, -0.5f),
+	glm::vec3( 0.5f,  0.5f, -0.5f),
+	glm::vec3( 0.5f,  0.5f, 0.5f),
+	glm::vec3( 0.5f,  0.5f, 0.5f),
+	glm::vec3(-0.5f,  0.5f, 0.5f),
+	glm::vec3(-0.5f,  0.5f, -0.5f)
 	};
 
-	//int number_of_verts = 10;
-	int index_buffer[]{ 
+	int number_of_verts = 36;
+
+	int index_buffer[]{
 		0,1,2,
 		1,2,3
-};
+	};
+
+	float texCoords[] =
+	{
+		0.0f, 0.0f,
+		1.0f, 0.0f,
+		0.5f, 1.0f
+	};
 
 	// Create and 'Load' Mesh
 	uint VAO;
 	uint VBO;
 	uint IBO;
 
+#pragma region Buffer Stuff
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &IBO);
 
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(glm::vec3), verticies, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, number_of_verts * sizeof(glm::vec3), vertices, GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(int), index_buffer, GL_STATIC_DRAW);
 
@@ -75,11 +125,12 @@ int main()
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+#pragma endregion
 
 	// Camera
-	glm::mat4 projection = glm::perspective(1.507f, 16 / 9.0f, 0.4f, 5.0f);
-	glm::mat4 view = glm::lookAt(glm::vec3(0, 0, 1), glm::vec3(0), glm::vec3(0, 1, 0));
-	glm::mat4 model = glm::mat4(1);
+	//glm::mat4 projection = glm::perspective(1.507f, 16 / 9.0f, 0.1f, 5.0f);
+	//glm::mat4 view = glm::lookAt(glm::vec3(0, 0, 1), glm::vec3(0), glm::vec3(0, 1, 0));
+
 
 	uint vertex_shader_ID = 0;
 	uint fragment_shader_ID = 0;
@@ -113,20 +164,7 @@ int main()
 	glGetShaderiv(vertex_shader_ID, GL_COMPILE_STATUS, &success);
 	if (success == GL_FALSE)
 	{
-		// Get the length of OpenGL error message
-		GLint log_length = 0;
-		glGetShaderiv(vertex_shader_ID, GL_INFO_LOG_LENGTH, &log_length);
-		// Create the error buffer
-		char* log = new char[log_length];
-		// Copy the error from the buffer
-		glGetShaderInfoLog(vertex_shader_ID, log_length, 0, log);
-
-		// Create the error message
-		std::string error_message(log);
-		error_message += "VERTEX_SHADER_FAILED_TO_COMPILE";
-		std::cout << error_message.c_str();
-		// Clean up anyway
-		delete[] log;
+		PrintErrorLog(vertex_shader_ID);
 	}
 #pragma endregion
 
@@ -157,20 +195,7 @@ int main()
 	glGetShaderiv(fragment_shader_ID, GL_COMPILE_STATUS, &success);
 	if (success == GL_FALSE)
 	{
-		// Get the length of OpenGL error message
-		GLint log_length = 0;
-		glGetShaderiv(fragment_shader_ID, GL_INFO_LOG_LENGTH, &log_length);
-		// Create the error buffer
-		char* log = new char[log_length];
-		// Copy the error from the buffer
-		glGetShaderInfoLog(fragment_shader_ID, log_length, 0, log);
-
-		// Create the error message
-		std::string error_message(log);
-		error_message += "FRAGMENT_SHADER_FAILED_TO_COMPILE";
-		std::cout << error_message.c_str();
-		// Clean up anyway
-		delete[] log;
+		PrintErrorLog(fragment_shader_ID);
 	}
 #pragma endregion
 
@@ -186,7 +211,7 @@ int main()
 	glLinkProgram(shader_program_ID);
 
 	success = GL_FALSE;
-	glGetShaderiv(shader_program_ID, GL_LINK_STATUS, &success);
+	glGetProgramiv(shader_program_ID, GL_LINK_STATUS, &success);
 	if (!success)
 	{
 		// Get the length of OpenGL error message
@@ -206,7 +231,7 @@ int main()
 	}
 #pragma endregion
 
-	glClearColor(0.0, 0.0, 0.0, 1.0);
+	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
 	// Game Loop
 	while (glfwWindowShouldClose(window) == false && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
@@ -216,22 +241,42 @@ int main()
 		static int framecount = 0;
 		framecount++;
 
-		model = glm::rotate(model, 0.016f, glm::vec3(0, 1, 0));
+		glm::mat4 projection = glm::mat4(1);
+		glm::mat4 view = glm::mat4(1);
+		glm::mat4 model = glm::mat4(1);
+		model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
+		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+		projection = glm::perspective(glm::radians(45.0f), 1280.0f / 960.0f, 0.1f, 100.0f);
 
 		glm::mat4 pv = projection * view;
-		glm::vec4 color = glm::vec4(0.0f, 0.8f, 1.0f, 1.0f);
+		glm::vec4 color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
 		glUseProgram(shader_program_ID);
 		auto uniform_location = glGetUniformLocation(shader_program_ID, "projection_view_matrix");
-		glUniformMatrix4fv(uniform_location, 1, false, glm::value_ptr(pv));	
+		glUniformMatrix4fv(uniform_location, 1, false, glm::value_ptr(pv));
 		uniform_location = glGetUniformLocation(shader_program_ID, "model_matrix");
 		glUniformMatrix4fv(uniform_location, 1, false, glm::value_ptr(model));
 		uniform_location = glGetUniformLocation(shader_program_ID, "color");
 		glUniform4fv(uniform_location, 1, glm::value_ptr(color));
 
+
+#pragma region Wireframe Mode
+		//static unsigned char wireframe;
+
+		//if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+		//	glPolygonMode(GL_FRONT_AND_BACK, (wireframe = 1 - wireframe) ? GL_LINE : GL_FILL);
+
+		if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		else if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		else if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
+			glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+#pragma endregion
+
 		glBindVertexArray(VAO);
-		//glDrawArrays(GL_TRIANGLES, 0, number_of_verts);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glDrawArrays(GL_TRIANGLES, 0, number_of_verts);
+		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 
 		glfwSwapBuffers(window);
@@ -243,4 +288,22 @@ int main()
 
 	glfwTerminate();
 	return 0;
+}
+
+void PrintErrorLog(uint ID)
+{
+	// Get the length of OpenGL error message
+	GLint log_length = 0;
+	glGetShaderiv(ID, GL_INFO_LOG_LENGTH, &log_length);
+	// Create the error buffer
+	char* log = new char[log_length];
+	// Copy the error from the buffer
+	glGetShaderInfoLog(ID, log_length, 0, log);
+
+	// Create the error message
+	std::string error_message(log);
+	error_message += "SHADER_FAILED_TO_COMPILE";
+	std::cout << error_message.c_str();
+	// Clean up anyway
+	delete[] log;
 }
