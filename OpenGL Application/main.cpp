@@ -1,15 +1,34 @@
 #include <iostream>
+#include <fstream>
+#include <sstream>
 #include "glm.hpp"
 #include "ext.hpp"
 #include "gl_core_4_5.h"
 #include "glfw3.h"
 
-#include <fstream>
-#include <sstream>
 
 using uint = unsigned int;
 
 void PrintErrorLog(uint ID);
+void ProcessInput(GLFWwindow* window);
+void MouseCallback(GLFWwindow* window, double x_pos, double y_pos);
+void ScrollCallback(GLFWwindow* window, double x_offset, double y_offset);
+
+// Camera Variables
+glm::vec3 camera_pos = glm::vec3(0.0f, 0.0f, 3.0f);
+glm::vec3 camera_front = glm::vec3(0.0f, 0.0f, -1.0f);
+glm::vec3 camera_up = glm::vec3(0.0f, 1.0f, 0.0f);
+
+// Delta time
+float delta_time = 0.0f;
+float last_frame = 0.0f;
+
+// Mouse values
+bool first_mouse = true;
+float yaw = -90.0f;
+float pitch = 0.0f;
+float last_x = 640.0f, last_y = 480.0f;
+float fov = 45.0f;
 
 int main()
 {
@@ -23,11 +42,16 @@ int main()
 
 	if (window == nullptr)
 	{
+		std::cout << "Failed to create GLFW window" << std::endl;
 		glfwTerminate();
 		return -2;
 	}
 
 	glfwMakeContextCurrent(window);
+	glfwSetCursorPosCallback(window, MouseCallback);
+	glfwSetScrollCallback(window, ScrollCallback);
+
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	if (ogl_LoadFunctions() == ogl_LOAD_FAILED)
 	{
@@ -47,16 +71,16 @@ int main()
 	glm::vec3 vertices[] =
 	{
 	glm::vec3(-0.5f, -0.5f, -0.5f),
-	glm::vec3( 0.5f, -0.5f, -0.5f),
-	glm::vec3( 0.5f,  0.5f, -0.5f),
-	glm::vec3( 0.5f,  0.5f, -0.5f),
+	glm::vec3(0.5f, -0.5f, -0.5f),
+	glm::vec3(0.5f,  0.5f, -0.5f),
+	glm::vec3(0.5f,  0.5f, -0.5f),
 	glm::vec3(-0.5f,  0.5f, -0.5f),
 	glm::vec3(-0.5f, -0.5f, -0.5f),
 
 	glm::vec3(-0.5f, -0.5f, 0.5f),
-	glm::vec3( 0.5f, -0.5f, 0.5f),
-	glm::vec3( 0.5f,  0.5f, 0.5f),
-	glm::vec3( 0.5f,  0.5f, 0.5f),
+	glm::vec3(0.5f, -0.5f, 0.5f),
+	glm::vec3(0.5f,  0.5f, 0.5f),
+	glm::vec3(0.5f,  0.5f, 0.5f),
 	glm::vec3(-0.5f,  0.5f, 0.5f),
 	glm::vec3(-0.5f, -0.5f, 0.5f),
 
@@ -67,24 +91,24 @@ int main()
 	glm::vec3(-0.5f, -0.5f, 0.5f),
 	glm::vec3(-0.5f,  0.5f, 0.5f),
 
-	glm::vec3( 0.5f,  0.5f, 0.5f),
-	glm::vec3( 0.5f,  0.5f, -0.5f),
-	glm::vec3( 0.5f, -0.5f, -0.5f),
-	glm::vec3( 0.5f, -0.5f, -0.5f),
-	glm::vec3( 0.5f, -0.5f, 0.5f),
-	glm::vec3( 0.5f,  0.5f, 0.5f),
+	glm::vec3(0.5f,  0.5f, 0.5f),
+	glm::vec3(0.5f,  0.5f, -0.5f),
+	glm::vec3(0.5f, -0.5f, -0.5f),
+	glm::vec3(0.5f, -0.5f, -0.5f),
+	glm::vec3(0.5f, -0.5f, 0.5f),
+	glm::vec3(0.5f,  0.5f, 0.5f),
 
 	glm::vec3(-0.5f, -0.5f, -0.5f),
-	glm::vec3( 0.5f, -0.5f, -0.5f),
-	glm::vec3( 0.5f, -0.5f, 0.5f),
-	glm::vec3( 0.5f, -0.5f, 0.5f),
+	glm::vec3(0.5f, -0.5f, -0.5f),
+	glm::vec3(0.5f, -0.5f, 0.5f),
+	glm::vec3(0.5f, -0.5f, 0.5f),
 	glm::vec3(-0.5f, -0.5f, 0.5f),
 	glm::vec3(-0.5f, -0.5f, -0.5f),
 
 	glm::vec3(-0.5f,  0.5f, -0.5f),
-	glm::vec3( 0.5f,  0.5f, -0.5f),
-	glm::vec3( 0.5f,  0.5f, 0.5f),
-	glm::vec3( 0.5f,  0.5f, 0.5f),
+	glm::vec3(0.5f,  0.5f, -0.5f),
+	glm::vec3(0.5f,  0.5f, 0.5f),
+	glm::vec3(0.5f,  0.5f, 0.5f),
 	glm::vec3(-0.5f,  0.5f, 0.5f),
 	glm::vec3(-0.5f,  0.5f, -0.5f)
 	};
@@ -108,6 +132,11 @@ int main()
 	uint VBO;
 	uint IBO;
 
+	// Shader ID's
+	uint vertex_shader_ID = 0;
+	uint fragment_shader_ID = 0;
+	uint shader_program_ID = 0;
+
 #pragma region Buffer Stuff
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
@@ -127,14 +156,20 @@ int main()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 #pragma endregion
 
-	// Camera
+#pragma region Camera
+	glm::vec3 camera_target = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 camera_direction = glm::normalize(camera_pos - camera_target);
+	glm::vec3 camera_right = glm::normalize(glm::cross(camera_up, camera_direction));
+
+	glm::mat4 view;
+	view = glm::lookAt(
+		glm::vec3(0.0f, 0.0f, 3.0f),
+		glm::vec3(0.0f, 0.0f, 0.0f),
+		glm::vec3(0.0f, 1.0f, 0.0f));
+
 	//glm::mat4 projection = glm::perspective(1.507f, 16 / 9.0f, 0.1f, 5.0f);
 	//glm::mat4 view = glm::lookAt(glm::vec3(0, 0, 1), glm::vec3(0), glm::vec3(0, 1, 0));
-
-
-	uint vertex_shader_ID = 0;
-	uint fragment_shader_ID = 0;
-	uint shader_program_ID = 0;
+#pragma endregion
 
 #pragma region Vertex Shader
 	// Load shader from file into string
@@ -231,25 +266,33 @@ int main()
 	}
 #pragma endregion
 
-	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+	glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // Background Colour
 
 	// Game Loop
 	while (glfwWindowShouldClose(window) == false && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		static int framecount = 0;
-		framecount++;
+		float current_frame = glfwGetTime();
+		delta_time = current_frame - last_frame;
+		last_frame = current_frame;
 
-		glm::mat4 projection = glm::mat4(1);
-		glm::mat4 view = glm::mat4(1);
+		ProcessInput(window);
+
+		// ---Model---
 		glm::mat4 model = glm::mat4(1);
-		model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
-		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-		projection = glm::perspective(glm::radians(45.0f), 1280.0f / 960.0f, 0.1f, 100.0f);
+		//model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
+
+		// ---View---
+		glm::mat4 view;
+		view = glm::lookAt(camera_pos, camera_pos + camera_front, camera_up);
+
+		// ---Projection---
+		glm::mat4 projection = glm::mat4(1);
+		projection = glm::perspective(glm::radians(fov), 1280.0f / 960.0f, 0.1f, 100.0f);
 
 		glm::mat4 pv = projection * view;
-		glm::vec4 color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+		glm::vec4 color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f); // Set colour of cube
 
 		glUseProgram(shader_program_ID);
 		auto uniform_location = glGetUniformLocation(shader_program_ID, "projection_view_matrix");
@@ -306,4 +349,64 @@ void PrintErrorLog(uint ID)
 	std::cout << error_message.c_str();
 	// Clean up anyway
 	delete[] log;
+}
+
+void ProcessInput(GLFWwindow* window)
+{
+	const float camera_speed = 2.5f * delta_time;
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		camera_pos += camera_speed * camera_front;
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		camera_pos -= camera_speed * camera_front;
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		camera_pos -= glm::normalize(glm::cross(camera_front, camera_up)) * camera_speed;
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		camera_pos += glm::normalize(glm::cross(camera_front, camera_up)) * camera_speed;
+	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+		camera_pos += camera_speed * camera_up;
+	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+		camera_pos -= camera_speed * camera_up;
+}
+
+void MouseCallback(GLFWwindow* window, double x_pos, double y_pos)
+{
+	if (first_mouse)
+	{
+		last_x = x_pos;
+		last_y = y_pos;
+		first_mouse = false;
+	}
+
+	float x_offset = x_pos - last_x;
+	float y_offset = last_y - y_pos;
+	last_x = x_pos;
+	last_y = y_pos;
+
+	const float sensitivity = 0.1f;
+	x_offset *= sensitivity;
+	y_offset *= sensitivity;
+
+	yaw += x_offset;
+	pitch += y_offset;
+
+	if (pitch > 89.0f)
+		pitch = 89.0f;
+	if (pitch < -89.0f)
+		pitch = -89.0f;
+
+	glm::vec3 direction;
+	direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+	direction.y = sin(glm::radians(pitch));
+	direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+	camera_front = glm::normalize(direction);
+}
+
+void ScrollCallback(GLFWwindow* window, double x_offset, double y_offset)
+{
+	if (fov > 1.0f && fov < 45.0f)
+		fov -= y_offset;
+	else if (fov <= 1.0f)
+		fov = 1.0f;
+	else if (fov >= 45.0f)
+		fov = 45.0f;
 }
