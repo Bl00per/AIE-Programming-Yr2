@@ -14,8 +14,7 @@
 
 void FreeCamera::update(float delta_time)
 {
-
-	GLFWwindow* window = glfwGetCurrentContext();
+	auto window = glfwGetCurrentContext();
 	// Vector to store all the keyboard input to
 	glm::vec4 input(0, 0, 0, 0);
 
@@ -39,6 +38,8 @@ void FreeCamera::update(float delta_time)
 	glm::vec4 move_direction = glm::normalize(-input.z * world_transform[2] + input.x * world_transform[0] + input.y * world_transform[1]);
 
 	world_transform[3] += (move_direction * speed * delta_time);
+	view_transform = glm::inverse(world_transform);
+
 	/* MOUSE LOOK */
 	double cursor_position_x;
 	double cursor_position_y;
@@ -64,6 +65,7 @@ void FreeCamera::update(float delta_time)
 		// Apply the rotation to the camera
 		world_transform = world_transform * rotation;
 		// Update PxV
+		view_transform = glm::inverse(world_transform);
 	}
 
 

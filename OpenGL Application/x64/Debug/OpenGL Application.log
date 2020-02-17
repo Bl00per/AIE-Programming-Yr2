@@ -1,2 +1,4 @@
-﻿  Camera.cpp
+﻿  main.cpp
+C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\main.cpp(267,30): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\main.cpp(268,16): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
   OpenGL Application.vcxproj -> C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\x64\Debug\OpenGL Application.exe

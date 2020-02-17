@@ -140,12 +140,11 @@ int main()
 #pragma endregion
 
 #pragma region Camera
-	FreeCamera main_camera;
+	Camera main_camera;
 
 	//glm::vec3 camera_target = glm::vec3(0.0f, 0.0f, 0.0f);
 	//glm::vec3 camera_direction = glm::normalize(camera_pos - camera_target);
 	//glm::vec3 camera_right = glm::normalize(glm::cross(camera_up, camera_direction));
-
 
 	//glm::mat4 view;
 	//view = glm::lookAt(
@@ -268,15 +267,14 @@ int main()
 		last_frame = current_frame;
 
 		// ---Camera---
-
+		main_camera.update(delta_time);
 
 		// ---Model---
 		glm::mat4 model = glm::mat4(1);
+		//model[3].z = 1.0f;
 		//model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
-		obj_mesh.draw();
 
-
-		glm::vec4 color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f); // Set colour of cube
+		glm::vec4 color = glm::vec4(0.0f, 1.0f, 1.0f, 1.0f); // Set colour of cube
 
 		glUseProgram(shader_program_ID);
 		auto uniform_location = glGetUniformLocation(shader_program_ID, "projection_view_matrix");
@@ -285,7 +283,7 @@ int main()
 		glUniformMatrix4fv(uniform_location, 1, false, glm::value_ptr(model));
 		uniform_location = glGetUniformLocation(shader_program_ID, "color");
 		glUniform4fv(uniform_location, 1, glm::value_ptr(color));
-
+		obj_mesh.draw();
 
 #pragma region Wireframe Mode
 		//static unsigned char wireframe;
@@ -304,7 +302,6 @@ int main()
 		glBindVertexArray(VAO);
 		glDrawArrays(GL_TRIANGLES, 0, number_of_verts);
 		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();

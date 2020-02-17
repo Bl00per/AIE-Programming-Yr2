@@ -5,6 +5,7 @@
 class FreeCamera : public Camera
 {
 public:
+	FreeCamera() : Camera::Camera() {}
 	//FreeCamera(
 	//	const vec3 a_position = vec3(0.0f, 0.0f, 3.0f),
 	//	const vec3 front = vec3(0.0f, 0.0f, -1.0f),

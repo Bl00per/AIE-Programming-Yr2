@@ -6,8 +6,13 @@ Camera::Camera(
 	float near,
 	float far)
 {
+	world_transform = mat4(1.0f);
+	view_transform = mat4(1.0f);
+	projection_transform = mat4(1.0f);
+	projection_view_transform = mat4(1.0f);
+
 	set_perspective(fov, aspect_ratio, near, far);
-	set_lookat(vec3(0.0f, 0.0f, 10.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 10.0f, 0.0f));
+	set_lookat(vec3(3.0f, 0.0f, 20.0f), vec3(-3.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
 }
 
 void Camera::update(float a_delta_time)
@@ -17,7 +22,7 @@ void Camera::update(float a_delta_time)
 void Camera::set_perspective(float fov, float aspect_ratio, float near, float far)
 {
 	projection_transform = glm::perspective(
-		glm::radians(fov),
+		fov,
 		aspect_ratio,
 		near,
 		far
@@ -48,6 +53,7 @@ void Camera::set_lookat(vec3 from, vec3 to, vec3 up)
 		to,
 		up
 	);
+	world_transform = glm::inverse(view_transform);
 
 	update_projection_view_transform();
 }
