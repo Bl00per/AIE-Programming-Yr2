@@ -9,12 +9,13 @@ using vec3 = glm::vec3;
 class Camera
 {
 public:
-	mat4 world_transform;
-	mat4 view_transform;
-	mat4 projection_transform;
-	mat4 projection_view_transform;
+	Camera(
+		float fov = glm::radians(45.0f),
+		float aspect_ratio = 16.0 / 9.0f,
+		float near = 0.01f,
+		float far = 100.0f);
 
-	void update(float a_delta_time);
+	virtual void update(float a_delta_time);
 
 	// Setters
 	void set_perspective(float fov, float aspect_ratio, float near, float far);
@@ -28,10 +29,16 @@ public:
 	mat4 get_projection();
 	mat4 get_projection_view();
 
-	//void update_projection_view_transform();
+protected:
+	mat4 world_transform;
+	mat4 view_transform;
+	mat4 projection_transform;
+	mat4 projection_view_transform;
+
+	void update_projection_view_transform();
 
 private:
-	float delta_time;
+	float a_delta_time;
 	float last_frame;
 };
 
