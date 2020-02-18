@@ -10,10 +10,25 @@
 using uint = unsigned int;
 
 void PrintErrorLog(uint ID);
+void process_input(GLFWwindow* window);
+void mouse_callback(GLFWwindow* window, double x_pos, double y_pos);
+void scroll_callback(GLFWwindow* window, double x_offset, double y_offset);
 
 // Delta time
 float delta_time = 0.0f;
 float last_frame = 0.0f;
+
+// Settings
+int width, height;
+
+const unsigned int SCR_WIDTH = width;
+const unsigned int SCR_HEIGHT = height;
+
+// Camera
+Camera main_camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 1.0f, 0.0f), 45.0f, -90.0f);
+float last_x = SCR_WIDTH / 2.0f;
+float last_y = SCR_HEIGHT / 2.0f;
+bool first_mouse = true;
 
 int main()
 {
@@ -33,6 +48,9 @@ int main()
 	}
 
 	glfwMakeContextCurrent(window);
+	glfwSetCursorPosCallback(window, mouse_callback);
+	glfwSetScrollCallback(window, scroll_callback);
+
 
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -48,6 +66,8 @@ int main()
 	printf("GL: %i.%i.\n", major, minor);
 
 	glEnable(GL_DEPTH_TEST);
+
+	glfwGetWindowSize(window, &width, &height);
 #pragma endregion
 
 	// Mesh Data
@@ -139,9 +159,7 @@ int main()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 #pragma endregion
 
-#pragma region Camera
-	Camera main_camera;
-
+#pragma region Old Camera
 	//glm::vec3 camera_target = glm::vec3(0.0f, 0.0f, 0.0f);
 	//glm::vec3 camera_direction = glm::normalize(camera_pos - camera_target);
 	//glm::vec3 camera_right = glm::normalize(glm::cross(camera_up, camera_direction));
@@ -266,8 +284,12 @@ int main()
 		delta_time = current_frame - last_frame;
 		last_frame = current_frame;
 
+		// ---Input---
+		process_input(window);
+
 		// ---Camera---
-		main_camera.update(delta_time);
+		//main_camera.update(delta_time);
+		
 
 		// ---Model---
 		glm::mat4 model = glm::mat4(1);
@@ -330,4 +352,39 @@ void PrintErrorLog(uint ID)
 	std::cout << error_message.c_str();
 	// Clean up anyway
 	delete[] log;
+}
+
+void process_input(GLFWwindow* window)
+{
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		main_camera.process_keyboard(camera_movement::FORWARD, delta_time);
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		main_camera.process_keyboard(camera_movement::BACKWARD, delta_time);
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		main_camera.process_keyboard(camera_movement::LEFT, delta_time);
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		main_camera.process_keyboard(camera_movement::RIGHT, delta_time);
+}
+
+void mouse_callback(GLFWwindow* window, double x_pos, double y_pos)
+{
+	if (first_mouse)
+	{
+		last_x = x_pos;
+		last_y = y_pos;
+		first_mouse = false;
+	}
+
+	float x_offset = x_pos - last_x;
+	float y_offset = last_y - y_pos; // reversed since y-coordinates go from bottom to top
+
+	last_x = x_pos;
+	last_y = y_pos;
+
+	main_camera.process_mouse_movement(x_offset, y_offset);
+}
+
+void scroll_callback(GLFWwindow* window, double x_offset, double y_offset)
+{
+	main_camera.process_mouse_scroll(y_offset);
 }

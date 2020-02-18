@@ -1,4 +1,12 @@
 ﻿  main.cpp
-C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\main.cpp(267,30): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\main.cpp(268,16): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\Camera.h(58,1): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\main.cpp(284,30): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\main.cpp(285,16): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\main.cpp(373,12): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\main.cpp(374,12): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\main.cpp(378,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\main.cpp(379,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\main.cpp(381,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\main.cpp(382,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\main.cpp(389,35): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
   OpenGL Application.vcxproj -> C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\x64\Debug\OpenGL Application.exe

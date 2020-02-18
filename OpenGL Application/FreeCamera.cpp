@@ -16,21 +16,27 @@ void FreeCamera::update(float delta_time)
 {
 	auto window = glfwGetCurrentContext();
 	// Vector to store all the keyboard input to
-	glm::vec4 input(0, 0, 0, 0);
+	glm::vec4 input(0.0f);
 
 	// Get the input and copy to vector (result is 1 if button is down)
 	// Left
-	input.x -= glfwGetKey(window, GLFW_KEY_A);
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		input.x -= speed;
 	// Right
-	input.x += glfwGetKey(window, GLFW_KEY_D);
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+	input.x += speed;
 	// Forwards
-	input.z += glfwGetKey(window, GLFW_KEY_W);
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		input.z += speed;
 	// Backwards
-	input.z -= glfwGetKey(window, GLFW_KEY_S);
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		input.z -= speed;
 	// Down
-	input.y += glfwGetKey(window, GLFW_KEY_Q);
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+		input.y += speed;
 	// Up
-	input.y -= glfwGetKey(window, GLFW_KEY_E);
+	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+		input.y -= speed;
 
 	// Modify the position based off of the input and the new_speed
 	//this->set_position(this->get_world_transform()[3] - (input * speed * delta_time));
