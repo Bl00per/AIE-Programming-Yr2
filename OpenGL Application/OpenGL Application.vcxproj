@@ -146,14 +146,12 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Dependencies\glcore\gl_core_4_5.c" />
-    <ClCompile Include="FreeCamera.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="OBJMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Dependencies\glcore\gl_core_4_5.h" />
-    <ClInclude Include="FreeCamera.h" />
     <ClInclude Include="OBJMesh.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

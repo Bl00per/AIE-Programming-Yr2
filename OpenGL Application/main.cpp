@@ -5,7 +5,7 @@
 #include "ext.hpp"
 #include "gl_core_4_5.h"
 #include "glfw3.h"
-#include "FreeCamera.h"
+#include "Camera.h"
 #include "OBJMesh.h"
 using uint = unsigned int;
 
@@ -364,6 +364,10 @@ void process_input(GLFWwindow* window)
 		main_camera.process_keyboard(camera_movement::LEFT, delta_time);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		main_camera.process_keyboard(camera_movement::RIGHT, delta_time);
+	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+		main_camera.process_keyboard(camera_movement::UP, delta_time);
+	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+		main_camera.process_keyboard(camera_movement::DOWN, delta_time);
 }
 
 void mouse_callback(GLFWwindow* window, double x_pos, double y_pos)

@@ -1,12 +1,15 @@
-﻿  main.cpp
-C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\Camera.h(58,1): warning C4305: 'argument': truncation from 'double' to 'float'
+﻿  Camera.cpp
+C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\Camera.h(60,1): warning C4305: 'argument': truncation from 'double' to 'float'
+  main.cpp
+C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\Camera.h(60,1): warning C4305: 'argument': truncation from 'double' to 'float'
 C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\main.cpp(284,30): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\main.cpp(285,16): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\main.cpp(373,12): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\main.cpp(374,12): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\main.cpp(378,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\main.cpp(379,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\main.cpp(381,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\main.cpp(382,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\main.cpp(389,35): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\main.cpp(377,12): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\main.cpp(378,12): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\main.cpp(382,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\main.cpp(383,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\main.cpp(385,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\main.cpp(386,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\main.cpp(393,35): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  Generating Code...
   OpenGL Application.vcxproj -> C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\x64\Debug\OpenGL Application.exe

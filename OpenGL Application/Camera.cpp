@@ -48,15 +48,21 @@ void Camera::update(float a_delta_time)
 void Camera::process_keyboard(camera_movement direction, float a_delta_time)
 {
 	float velocity = movement_speed * a_delta_time;
-
+	glm::vec4 position = world_transform[3];
 	if (direction == camera_movement::FORWARD)
-		position += front * velocity;
+		position -= world_transform[2] * velocity;
 	if (direction == camera_movement::BACKWARD)
-		position -= front * velocity;
+		position += world_transform[2] * velocity;
 	if (direction == camera_movement::LEFT)
-		position -= right * velocity;
+		position -= world_transform[0] * velocity;
 	if (direction == camera_movement::RIGHT)
-		position += right * velocity;
+		position += world_transform[0] * velocity;
+	if (direction == camera_movement::UP)
+		position += world_transform[1] * velocity;
+	if (direction == camera_movement::DOWN)
+		position -= world_transform[1] * velocity;
+
+	set_position(glm::vec3(position));
 }
 
 void Camera::process_mouse_movement(float x_offset, float y_offset, GLboolean constrain_pitch)
@@ -148,7 +154,7 @@ mat4 Camera::get_world_transform()
 
 mat4 Camera::get_view()
 {
-	return view_transform;
+	return glm::lookAt(position, position + front, up);
 }
 
 mat4 Camera::get_projection()
