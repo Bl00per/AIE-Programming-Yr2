@@ -108,7 +108,7 @@ void free_camera::update(double a_delta_time)
 		// Identity matrix to accumulate rotation
 		auto rotation = glm::mat4(1.0f); 
 		// Left / Right rotation
-		rotation = rotation * glm::rotate(float(angular_speed * a_delta_time * -delta_x), glm::vec3(view_matrix[1]));
+		rotation = rotation * glm::rotate(float(angular_speed * a_delta_time * delta_x), glm::vec3(view_matrix[1]));
 		// Up / Down rotation
 		rotation = rotation * glm::rotate(float(angular_speed * a_delta_time * -delta_y), glm::vec3(1.0f, 0.0f, 0.0f));
 		

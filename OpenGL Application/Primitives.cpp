@@ -89,10 +89,10 @@ Mesh* Primitives::plane()
 {
 	std::vector<Vertex> plane_vertices
 	{
-		Vertex(-0.5f, -0.5f, 0.5f, 0.0f, 1.0f, 0, 0, 1, 0),	//front bottom left
-		Vertex(-0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 0, 0, 1, 0),		//front top left
-		Vertex(0.5f, 0.5f, 0.5f,  1.0f, 0.0f, 0, 1, 0, 0),		//front top right
-		Vertex(0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 0, 1, 0, 0)		//front bottom right
+		Vertex(-0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0, 0, 1, 0),	//front bottom left
+		Vertex(-0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 0, 0, 1, 0),		//front top left
+		Vertex(0.5f, 0.5f, 0.0f,  1.0f, 0.0f, 0, 1, 0, 0),		//front top right
+		Vertex(0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 0, 1, 0, 0)		//front bottom right
 	};
 
 	std::vector<uint> plane_indices

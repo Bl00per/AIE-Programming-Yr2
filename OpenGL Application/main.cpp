@@ -29,7 +29,7 @@ const unsigned int SCR_WIDTH = width;
 const unsigned int SCR_HEIGHT = height;
 
 // Camera
-free_camera main_camera(glm::vec3(0.0f, 0.0f, -3.0f), glm::vec3(1.0f, 0.0f, -1.0f));
+free_camera main_camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f));
 
 int main()
 {
@@ -91,12 +91,12 @@ int main()
 #pragma endregion
 
 #pragma region Texture
-
+	Texture* texture_1 = new Texture(".\\Textures\\unknown.png");
 #pragma endregion
 
 	// Model
 	aie::OBJMesh obj_mesh;
-	Mesh* cube = Primitives::cube();
+	//Mesh* cube = Primitives::cube();
 	Mesh* plane = Primitives::plane();
 	//obj_mesh.load("./Models/Bunny.obj", false);
 
@@ -124,7 +124,7 @@ int main()
 		pshader->setMat4("model_matrix", model);
 		pshader->setVec4("color", color);
 		//obj_mesh.draw();
-		plane->draw(pshader); 
+		plane->draw(pshader, texture_1); 
 
 
 #pragma region Wireframe Mode

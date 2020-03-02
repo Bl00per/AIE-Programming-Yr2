@@ -49,8 +49,8 @@ struct Vertex
 #pragma endregion
 
 	glm::vec3 position;
-	glm::vec4 normal;
 	glm::vec2 texture_coords;
+	glm::vec4 normal;
 };
 
 class Mesh
