@@ -14,7 +14,8 @@ uniform sampler2D diffuse_texture;
 //uniform vec3 Ia;				//Ambient light colour
 //uniform vec3 Id;				//Diffuse light colour
 //uniform vec3 Is;				//Specular light colour 
-//uniform vec3 light_direction;
+
+uniform vec3 light_direction;
 
 uniform vec3 camera_position; 
 
@@ -24,12 +25,12 @@ out vec4 frag_colour;
 void main()
 {
 	//Ensure normal and light direction are normalised 
-	//vec3 N = normalize(-v_normal);
-	//vec3 L = normalize(light_direction);
+	vec3 N = normalize(-v_normal);
+	vec3 L = normalize(light_direction);
 
 	//Calculate lambert term (negate light direction)
-	//float lambert_term = max(0, min(1, dot(N, -L))); 
-
+	float lambert_term = max(0, min(1, dot(N, -L))); 
+	frag_colour = vec4(lambertTerm, lambertTerm, lambertTerm, 1);
 
 	//Calculate view vector and reflection vector
 	//vec3 V = normalize(camera_position - v_position.xyz);
@@ -51,5 +52,5 @@ void main()
 	//frag_colour = vec4(v_normal, 1);
 	//vec4 result = vec4(ambient + diffuse + specular, 1); 
 	//frag_colour = (result + col);
-	frag_colour = vec4(final_texture_coordinates, 0, 1);
+	//frag_colour = vec4(final_texture_coordinates, 0, 1);
 }

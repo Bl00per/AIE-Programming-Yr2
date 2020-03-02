@@ -48,5 +48,15 @@ public:
 
     void setMat4(const std::string& name, const glm::mat4& mat) const;
 #pragma endregion
+
+
+    Shader* phong_shader;
+
+    struct Light
+    {
+        glm::vec3 direction;
+    };
+
+    Light m_light;
 };
 #endif

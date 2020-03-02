@@ -29,7 +29,7 @@ const unsigned int SCR_WIDTH = width;
 const unsigned int SCR_HEIGHT = height;
 
 // Camera
-free_camera main_camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f));
+free_camera main_camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 
 int main()
 {
@@ -98,7 +98,7 @@ int main()
 	aie::OBJMesh obj_mesh;
 	//Mesh* cube = Primitives::cube();
 	Mesh* plane = Primitives::plane();
-	//obj_mesh.load("./Models/Bunny.obj", false);
+	obj_mesh.load("./Models/Bunny.obj", false);
 
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // Background Colour
 
@@ -109,6 +109,9 @@ int main()
 	while (glfwWindowShouldClose(window) == false && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		
+		float time = glfwGetTime();
+		pshader->m_light.direction = glm::normalize(glm::vec3(glm::cos(time * 2), glm::sin(time * 2), 0));
 
 		double current_frame = glfwGetTime();
 		delta_time = current_frame - last_frame;
@@ -123,8 +126,8 @@ int main()
 		pshader->setMat4("projection_view_matrix", main_camera.get_projection_view_transform());
 		pshader->setMat4("model_matrix", model);
 		pshader->setVec4("color", color);
-		//obj_mesh.draw();
-		plane->draw(pshader, texture_1); 
+		obj_mesh.draw();
+		//plane->draw(pshader/*, texture_1*/); 
 
 
 #pragma region Wireframe Mode
