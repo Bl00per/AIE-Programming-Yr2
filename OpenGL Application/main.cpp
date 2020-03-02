@@ -5,14 +5,18 @@
 #include "ext.hpp"
 #include "gl_core_4_5.h"
 #include "glfw3.h"
-#include "Camera.h"
+#include "free_camera.h"
 #include "OBJMesh.h"
+#include "Shader.h"
+#include "Mesh.h"
+#include "Primitives.h"
+
 using uint = unsigned int;
 
 void PrintErrorLog(uint ID);
-void process_input(GLFWwindow* window);
-void mouse_callback(GLFWwindow* window, double x_pos, double y_pos);
-void scroll_callback(GLFWwindow* window, double x_offset, double y_offset);
+//void process_input(GLFWwindow* window);
+//void mouse_callback(GLFWwindow* window, double x_pos, double y_pos);
+//void scroll_callback(GLFWwindow* window, double x_offset, double y_offset);
 
 // Delta time
 float delta_time = 0.0f;
@@ -25,10 +29,7 @@ const unsigned int SCR_WIDTH = width;
 const unsigned int SCR_HEIGHT = height;
 
 // Camera
-Camera main_camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 1.0f, 0.0f), 45.0f, -90.0f);
-float last_x = SCR_WIDTH / 2.0f;
-float last_y = SCR_HEIGHT / 2.0f;
-bool first_mouse = true;
+free_camera main_camera(glm::vec3(0.0f, 0.0f, -3.0f), glm::vec3(1.0f, 0.0f, -1.0f));
 
 int main()
 {
@@ -48,8 +49,8 @@ int main()
 	}
 
 	glfwMakeContextCurrent(window);
-	glfwSetCursorPosCallback(window, mouse_callback);
-	glfwSetScrollCallback(window, scroll_callback);
+	//glfwSetCursorPosCallback(window, mouse_callback);
+	//glfwSetScrollCallback(window, scroll_callback);
 
 
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -70,95 +71,6 @@ int main()
 	glfwGetWindowSize(window, &width, &height);
 #pragma endregion
 
-	// Mesh Data
-	glm::vec3 vertices[] =
-	{
-	glm::vec3(-0.5f, -0.5f, -0.5f),
-	glm::vec3(0.5f, -0.5f, -0.5f),
-	glm::vec3(0.5f,  0.5f, -0.5f),
-	glm::vec3(0.5f,  0.5f, -0.5f),
-	glm::vec3(-0.5f,  0.5f, -0.5f),
-	glm::vec3(-0.5f, -0.5f, -0.5f),
-
-	glm::vec3(-0.5f, -0.5f, 0.5f),
-	glm::vec3(0.5f, -0.5f, 0.5f),
-	glm::vec3(0.5f,  0.5f, 0.5f),
-	glm::vec3(0.5f,  0.5f, 0.5f),
-	glm::vec3(-0.5f,  0.5f, 0.5f),
-	glm::vec3(-0.5f, -0.5f, 0.5f),
-
-	glm::vec3(-0.5f,  0.5f, 0.5f),
-	glm::vec3(-0.5f,  0.5f, -0.5f),
-	glm::vec3(-0.5f, -0.5f, -0.5f),
-	glm::vec3(-0.5f, -0.5f, -0.5f),
-	glm::vec3(-0.5f, -0.5f, 0.5f),
-	glm::vec3(-0.5f,  0.5f, 0.5f),
-
-	glm::vec3(0.5f,  0.5f, 0.5f),
-	glm::vec3(0.5f,  0.5f, -0.5f),
-	glm::vec3(0.5f, -0.5f, -0.5f),
-	glm::vec3(0.5f, -0.5f, -0.5f),
-	glm::vec3(0.5f, -0.5f, 0.5f),
-	glm::vec3(0.5f,  0.5f, 0.5f),
-
-	glm::vec3(-0.5f, -0.5f, -0.5f),
-	glm::vec3(0.5f, -0.5f, -0.5f),
-	glm::vec3(0.5f, -0.5f, 0.5f),
-	glm::vec3(0.5f, -0.5f, 0.5f),
-	glm::vec3(-0.5f, -0.5f, 0.5f),
-	glm::vec3(-0.5f, -0.5f, -0.5f),
-
-	glm::vec3(-0.5f,  0.5f, -0.5f),
-	glm::vec3(0.5f,  0.5f, -0.5f),
-	glm::vec3(0.5f,  0.5f, 0.5f),
-	glm::vec3(0.5f,  0.5f, 0.5f),
-	glm::vec3(-0.5f,  0.5f, 0.5f),
-	glm::vec3(-0.5f,  0.5f, -0.5f)
-	};
-
-	int number_of_verts = 36;
-
-	int index_buffer[]{
-		0,1,2,
-		1,2,3
-	};
-
-	float texCoords[] =
-	{
-		0.0f, 0.0f,
-		1.0f, 0.0f,
-		0.5f, 1.0f
-	};
-
-	// Create and 'Load' Mesh
-	uint VAO;
-	uint VBO;
-	uint IBO;
-
-	// Shader ID's
-	uint vertex_shader_ID = 0;
-	uint fragment_shader_ID = 0;
-	uint shader_program_ID = 0;
-
-#pragma region Buffer Stuff
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-	glGenBuffers(1, &IBO);
-
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, number_of_verts * sizeof(glm::vec3), vertices, GL_STATIC_DRAW);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(int), index_buffer, GL_STATIC_DRAW);
-
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), 0);
-
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-#pragma endregion
-
 #pragma region Old Camera
 	//glm::vec3 camera_target = glm::vec3(0.0f, 0.0f, 0.0f);
 	//glm::vec3 camera_direction = glm::normalize(camera_pos - camera_target);
@@ -174,106 +86,24 @@ int main()
 	//glm::mat4 view = glm::lookAt(glm::vec3(0, 0, 1), glm::vec3(0), glm::vec3(0, 1, 0));
 #pragma endregion
 
-#pragma region Vertex Shader
-	// Load shader from file into string
-	std::string shader_data;
-	std::ifstream in_file_stream(".\\Shaders\\simple_vertex.glsl", std::ifstream::in);
-
-	// Load the source into a string for compliation
-	std::stringstream string_stream;
-	if (in_file_stream.is_open())
-	{
-		string_stream << in_file_stream.rdbuf();
-		shader_data = string_stream.str();
-		in_file_stream.close();
-	}
-
-	// Allocate space for shader program
-	vertex_shader_ID = glCreateShader(GL_VERTEX_SHADER);
-	// Convert to raw char*
-	const char* data = shader_data.c_str();
-	// Send in the char* to shader location
-	glShaderSource(vertex_shader_ID, 1, (const GLchar**)&data, 0);
-	// Build!
-	glCompileShader(vertex_shader_ID);
-
-	// Did it work?
-	GLint success = GL_FALSE;
-	glGetShaderiv(vertex_shader_ID, GL_COMPILE_STATUS, &success);
-	if (success == GL_FALSE)
-	{
-		PrintErrorLog(vertex_shader_ID);
-	}
+#pragma region Shader
+	Shader* pshader = new Shader(".\\Shaders\\simple_vertex.glsl", ".\\Shaders\\simple_frag.glsl");
 #pragma endregion
 
-#pragma region Fragment Shader
-	// Load shader from file into string
-	std::ifstream in_file_stream_frag(".\\Shaders\\simple_frag.glsl", std::ifstream::in);
-	std::stringstream frag_string_stream;
+#pragma region Texture
 
-	// Load the source into a string for compliation
-	if (in_file_stream_frag.is_open())
-	{
-		frag_string_stream << in_file_stream_frag.rdbuf();
-		shader_data = frag_string_stream.str();
-		in_file_stream_frag.close();
-	}
-
-	// Allocate space for shader program
-	fragment_shader_ID = glCreateShader(GL_FRAGMENT_SHADER);
-	// Convert to raw char*
-	data = shader_data.c_str();
-	// Send in the char* to shader location
-	glShaderSource(fragment_shader_ID, 1, (const GLchar**)&data, 0);
-	// Build!
-	glCompileShader(fragment_shader_ID);
-
-	// Did it work?
-	success = GL_FALSE;
-	glGetShaderiv(fragment_shader_ID, GL_COMPILE_STATUS, &success);
-	if (success == GL_FALSE)
-	{
-		PrintErrorLog(fragment_shader_ID);
-	}
-#pragma endregion
-
-#pragma region Shader Linking
-	// Finally link them
-	shader_program_ID = glCreateProgram();
-
-	// Attach both shaders by ID and type
-	glAttachShader(shader_program_ID, vertex_shader_ID);
-	glAttachShader(shader_program_ID, fragment_shader_ID);
-
-	// Link the two programs
-	glLinkProgram(shader_program_ID);
-
-	success = GL_FALSE;
-	glGetProgramiv(shader_program_ID, GL_LINK_STATUS, &success);
-	if (!success)
-	{
-		// Get the length of OpenGL error message
-		GLint log_length = 0;
-		glGetShaderiv(shader_program_ID, GL_INFO_LOG_LENGTH, &log_length);
-		// Create the error buffer
-		char* log = new char[log_length];
-		// Copy the error from the buffer
-		glGetProgramInfoLog(shader_program_ID, log_length, 0, log);
-
-		// Create the error message
-		std::string error_message(log);
-		error_message += "SHADER_FAILED_TO_COMPILE";
-		std::cout << error_message.c_str();
-		// Clean up anyway
-		delete[] log;
-	}
 #pragma endregion
 
 	// Model
 	aie::OBJMesh obj_mesh;
-	obj_mesh.load("./Models/Bunny.obj", false);
+	Mesh* cube = Primitives::cube();
+	Mesh* plane = Primitives::plane();
+	//obj_mesh.load("./Models/Bunny.obj", false);
 
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // Background Colour
+
+	// ---Model---
+	glm::mat4 model = glm::mat4(1);
 
 	// Game Loop
 	while (glfwWindowShouldClose(window) == false && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
@@ -284,28 +114,18 @@ int main()
 		delta_time = current_frame - last_frame;
 		last_frame = current_frame;
 
-		// ---Input---
-		process_input(window);
-
 		// ---Camera---
-		//main_camera.update(delta_time);
-		
+		main_camera.update(delta_time);
 
-		// ---Model---
-		glm::mat4 model = glm::mat4(1);
-		//model[3].z = 1.0f;
-		//model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
-
+		// ---Colour---
 		glm::vec4 color = glm::vec4(0.0f, 1.0f, 1.0f, 1.0f); // Set colour of cube
+		pshader->use();
+		pshader->setMat4("projection_view_matrix", main_camera.get_projection_view_transform());
+		pshader->setMat4("model_matrix", model);
+		pshader->setVec4("color", color);
+		//obj_mesh.draw();
+		plane->draw(pshader); 
 
-		glUseProgram(shader_program_ID);
-		auto uniform_location = glGetUniformLocation(shader_program_ID, "projection_view_matrix");
-		glUniformMatrix4fv(uniform_location, 1, false, glm::value_ptr(main_camera.get_projection_view()));
-		uniform_location = glGetUniformLocation(shader_program_ID, "model_matrix");
-		glUniformMatrix4fv(uniform_location, 1, false, glm::value_ptr(model));
-		uniform_location = glGetUniformLocation(shader_program_ID, "color");
-		glUniform4fv(uniform_location, 1, glm::value_ptr(color));
-		obj_mesh.draw();
 
 #pragma region Wireframe Mode
 		//static unsigned char wireframe;
@@ -321,16 +141,9 @@ int main()
 			glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
 #pragma endregion
 
-		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, number_of_verts);
-		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
-
-	glDeleteBuffers(1, &VAO);
-	glDeleteBuffers(1, &VBO);
 
 	glfwTerminate();
 	return 0;
@@ -354,41 +167,41 @@ void PrintErrorLog(uint ID)
 	delete[] log;
 }
 
-void process_input(GLFWwindow* window)
-{
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		main_camera.process_keyboard(camera_movement::FORWARD, delta_time);
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		main_camera.process_keyboard(camera_movement::BACKWARD, delta_time);
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		main_camera.process_keyboard(camera_movement::LEFT, delta_time);
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		main_camera.process_keyboard(camera_movement::RIGHT, delta_time);
-	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-		main_camera.process_keyboard(camera_movement::UP, delta_time);
-	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-		main_camera.process_keyboard(camera_movement::DOWN, delta_time);
-}
+//void process_input(GLFWwindow* window)
+//{
+//	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+//		main_camera.process_keyboard(camera_movement::FORWARD, delta_time);
+//	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+//		main_camera.process_keyboard(camera_movement::BACKWARD, delta_time);
+//	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+//		main_camera.process_keyboard(camera_movement::LEFT, delta_time);
+//	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+//		main_camera.process_keyboard(camera_movement::RIGHT, delta_time);
+//	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+//		main_camera.process_keyboard(camera_movement::UP, delta_time);
+//	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+//		main_camera.process_keyboard(camera_movement::DOWN, delta_time);
+//}
+//
+//void mouse_callback(GLFWwindow* window, double x_pos, double y_pos)
+//{
+//	if (first_mouse)
+//	{
+//		last_x = x_pos;
+//		last_y = y_pos;
+//		first_mouse = false;
+//	}
+//
+//	float x_offset = x_pos - last_x;
+//	float y_offset = last_y - y_pos; // reversed since y-coordinates go from bottom to top
+//
+//	last_x = x_pos;
+//	last_y = y_pos;
+//
+//	main_camera.process_mouse_movement(x_offset, y_offset);
+//}
 
-void mouse_callback(GLFWwindow* window, double x_pos, double y_pos)
-{
-	if (first_mouse)
-	{
-		last_x = x_pos;
-		last_y = y_pos;
-		first_mouse = false;
-	}
-
-	float x_offset = x_pos - last_x;
-	float y_offset = last_y - y_pos; // reversed since y-coordinates go from bottom to top
-
-	last_x = x_pos;
-	last_y = y_pos;
-
-	main_camera.process_mouse_movement(x_offset, y_offset);
-}
-
-void scroll_callback(GLFWwindow* window, double x_offset, double y_offset)
-{
-	main_camera.process_mouse_scroll(y_offset);
-}
+//void scroll_callback(GLFWwindow* window, double x_offset, double y_offset)
+//{
+//	main_camera.process_mouse_scroll(y_offset);
+//}

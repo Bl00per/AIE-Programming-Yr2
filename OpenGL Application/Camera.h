@@ -1,114 +1,132 @@
+/* camera.h
+   @brief Base camera class for OpenGL.
+   Stores all the transformation matricies
+   to position, move and view from the camera in the scene.
+
+   Adam Clarke - 21/04/2017
+
+   Edit - 2018 05 24 - Removed GLFWwindow reference in update. This was
+					   legacy tutorial code for input polling to move the camera.
+		- 2019 08 29 - Ported to gl_foundation_x64 as tutorial code
+*/
 #pragma once
-#include "glfw3.h"
-#include "glm.hpp"
-#include "ext.hpp"
+#ifndef _CAMERA_H_
+#define _CAMERA_H_
 
-using mat4 = glm::mat4;
-using vec3 = glm::vec3;
+/* Maths headers for transforms and cameras */
+#include <glm.hpp>
+#include <ext.hpp>
 
-enum class camera_movement
+/* @namespace slab
+*/
+namespace slab
 {
-	FORWARD,
-	BACKWARD,
-	LEFT,
-	RIGHT,
-	UP,
-	DOWN
-};
-
-// Default camera values
-const float YAW = -90.0f;
-const float PITCH = 0.0f;
-const float SPEED = 10.0f;
-const float SENSITIVITY = 0.1f;
-const float FOV = 45.0f;
-
-class Camera
-{
-public:
-	// Camera Attributes
-	vec3 position;
-	vec3 front;
-	vec3 up;
-	vec3 right;
-	vec3 world_up;
-	// Euler Angles
-	float yaw;
-	float pitch;
-	// Camera Options
-	float movement_speed;
-	float mouse_sensitivity;
-	float fov;
-
-	// Constructor with vectors
-	Camera(vec3 a_position, vec3 a_up, float a_yaw, float a_pitch) :
-		front(vec3(0.0f, 0.0f, -1.0f)),
-		movement_speed(SPEED),
-		mouse_sensitivity(SENSITIVITY),
-		fov(FOV)
+	/* @brief Definition of World, View, and Projection transforms, and
+	   access and modifier functions.
+	*/
+	class camera
 	{
-		position = a_position;
-		world_up = a_up;
-		yaw = a_yaw;
-		pitch = a_pitch;
+	public:
+		/* @brief Pure virtual update as each camera will have a unique update
+		   @param Frame time if needed for moving
+		*/
+		virtual void update(double a_delta_time) = 0;
 
-		world_transform = mat4(1.0f);
-		view_transform = mat4(1.0f);
-		projection_transform = mat4(1.0f);
-		projection_view_transform = mat4(1.0f);
+		/* @brief Set a new perspective for the camera
+		   @param Field of view in Y screen space around local X axis
+		   @param Cameras's aspect ratio
+		   @param Near plane distance in world units
+		   @param Far plane distance in world units
+		*/
+		void set_perspective(const float a_FOV_Y, const float a_aspect_ratio,
+			const float a_near_distance, const float a_far_distance);
 
-		set_perspective(glm::radians(fov), 16.0 / 9.0f, 0.1f, 100.0f);
-		set_lookat(vec3(3.0f, 0.0f, 20.0f), vec3(-3.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
+		/* @brief Set a new orthographic projection
+		   @param Width in world units
+		   @param Height in world units
+		   @param Near plane depth
+		   @param Far plane depth
+		*/
+		void set_orthographic(const float a_width, const float a_height,
+			const float a_near_distance, const float a_far_distance);
 
-		update_camera_vectors();
-		update_projection_view_transform();
-	}
+		/* @brief Set look from and to points
+		   @param Camera's position
+		   @param Camera's look-target position
+		   @param Camera;s yaw axis (Camera Up) Y axis by default
+		*/
+		void set_look_at(const glm::vec3 &a_from_position, const glm::vec3 &a_to_position,
+			const glm::vec3 &a_yaw_axis = glm::vec3(0.0f, 1.0f, 0.0f));
 
-	// Constructor with scalar values
-	Camera(float a_pos_x, float a_pos_y, float a_pos_z, float a_up_x, float a_up_y, float a_up_z, float a_yaw, float a_pitch) :
-		front(vec3(0.0f, 0.0f, -1.0f)),
-		movement_speed(SPEED),
-		mouse_sensitivity(SENSITIVITY),
-		fov(FOV)
-	{
-		position = vec3(a_pos_x, a_pos_y, a_pos_z);
-		world_up = vec3(a_up_x, a_up_y, a_up_z);
-		yaw = a_yaw;
-		pitch = a_pitch;
+		/* @brief Move the camera to this position
+		   @param Camera's new position
+		*/
+		void set_position(const glm::vec3 &a_position);
 
-		update_camera_vectors();
-	}
+		/* @brief Returns camera current position
+		   @param Copy of camera's position
+		*/
+		glm::vec3 get_position() const;
 
-	virtual void update(float a_delta_time);
+		/* @brief Returns camera current forward direction
+		   @param Copy of camera's current forward direction
+		*/
+		glm::vec3 get_direction() const;
 
-	void process_keyboard(camera_movement direction, float a_delta_time);
-	void process_mouse_movement(float x_offset, float y_offset, GLboolean constrain_pitch = true);
-	void process_mouse_scroll(float y_offset);
+		/* @brief Returns camera current up direction
+		   @param Copy of camera's current up direction
+		*/
+		glm::vec3 get_up_vector() const;
 
-	// Setters
-	void set_perspective(float fov, float aspect_ratio, float near, float far);
-	void set_perspective_ortho(float left, float right, float bottom, float top, float near, float far);
-	void set_lookat(vec3 from, vec3 to, vec3 up);
-	void set_position(vec3 position);
+		/* @brief Read camera's world transform
+		   @return Copy of camera's world transform
+		*/
+		glm::mat4 get_world_transform() const;
 
-	// Getters
-	mat4 get_world_transform();
-	mat4 get_view();
-	mat4 get_projection();
-	mat4 get_projection_view();
+		/* @brief Read camera's view transform
+		   @return Copy of camera's world transform
+		*/
+		glm::mat4 get_view_transform() const;
 
-protected:
-	mat4 world_transform;
-	mat4 view_transform;
-	mat4 projection_transform;
-	mat4 projection_view_transform;
+		/* @brief Read Camera's projection transform
+		   @return Copy of camera's projection transform
+		*/
+		glm::mat4 get_projection_transform() const;
 
-	void update_projection_view_transform();
+		/* @brief  Get a precalculated Projection x View transform
+		   @return Copy of PxV transforms
+		*/
+		glm::mat4 get_projection_view_transform() const;
 
-private:
-	void update_camera_vectors();
+	protected:
+		/*	@brief Protected constructor for matrix default initialization
+		*/
+		camera();
 
-	float a_delta_time;
-	float last_frame;
-};
+		/*	@brief Camera position and rotation
+		*/
+		glm::mat4 world_matrix;
+
+		/*	@brief Inverse world transform for rendering
+		*/
+		glm::mat4 view_matrix;
+
+		/*	@brief Projection matrix information
+		*/
+		glm::mat4 projection_matrix;
+
+		/*	@brief Projection x View transformations
+		*/
+		glm::mat4 projection_x_view_matrix;
+
+		/*	@brief Aspect ratio for given projection
+		*/
+		float aspect_ratio;
+
+		/*	@brief Update whever the projection of view change
+		*/
+		void update_matricies();
+	};
+}
+#endif // _CAMERA_H_
 
