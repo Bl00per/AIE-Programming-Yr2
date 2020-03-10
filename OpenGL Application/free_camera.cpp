@@ -67,7 +67,7 @@ void free_camera::update(double a_delta_time)
 		input_flag = true;
 	}
 	// Up
-	if (glfwGetKey(glfw_window, GLFW_KEY_LEFT_CONTROL))
+	if (glfwGetKey(glfw_window, GLFW_KEY_LEFT_SHIFT))
 	{
 		displacement -= glm::vec3(0.0f, 1.0f, 0.0f);
 		input_flag = true;

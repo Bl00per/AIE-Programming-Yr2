@@ -1,8 +1,9 @@
 #version 450
 
-layout(location = 0) in vec3 local_position;
-layout(location = 1) in vec2 texture_coordinates;
-layout(location = 2) in vec4 normal;
+layout(location = 0) in vec4 local_position;
+layout(location = 1) in vec4 normal;
+layout(location = 2) in vec2 texture_coordinates;
+layout(location = 3) in vec4 tangent;
 
 out vec4 v_position;
 out vec3 v_normal;
@@ -18,7 +19,7 @@ out vec2 final_texture_coordinates;
 void main()
 {
 	final_texture_coordinates = texture_coordinates;
-	v_position = model_matrix * vec4(local_position, 1);
+	v_position = model_matrix * local_position;
 	v_normal = normal_matrix * normal.xyz;
-	gl_Position = (projection_view_matrix * model_matrix) * vec4(local_position, 1);
+	gl_Position = (projection_view_matrix * model_matrix) * local_position;
 }

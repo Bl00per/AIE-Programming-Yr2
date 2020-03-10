@@ -87,23 +87,37 @@ int main()
 #pragma endregion
 
 #pragma region Shader
-	Shader* pshader = new Shader(".\\Shaders\\simple_vertex.glsl", ".\\Shaders\\simple_frag.glsl");
+	Shader* pshader = new Shader(".\\Shaders\\simple_vertex.glsl", ".\\Shaders\\textured_frag_shader.glsl");
 #pragma endregion
 
-#pragma region Texture
-	Texture* texture_1 = new Texture(".\\Textures\\unknown.png");
-#pragma endregion
 
 	// Model
 	aie::OBJMesh obj_mesh;
 	//Mesh* cube = Primitives::cube();
 	Mesh* plane = Primitives::plane();
-	obj_mesh.load("./Models/Bunny.obj", false);
+	obj_mesh.load("./Models/Chair/Regency_low_optimized.obj", false);
 
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // Background Colour
 
 	// ---Model---
-	glm::mat4 model = glm::mat4(1);
+	// glm::mat4 model = glm::mat4(1);
+	glm::mat4 model = glm::mat4(0.01);
+	model[3][3] = 1.0f; // Resetting model position cause it's tiny
+
+#pragma region Texture
+	Texture* texture_1 = new Texture(".\\Textures\\unknown.png");
+
+	// Diffuse Texture
+	Texture diffuse("./Models/Chair/Regency_low_my_Divani_Chester_nuovi_regency_mat_Diffuse.png");
+	// Initialize our shader
+	pshader->use();
+	// Initialize our diffuse texture
+	int diffuse_location = glGetUniformLocation(pshader->shader_ID, "diffuse_texture");
+	glUniform1i(diffuse_location, 0);
+
+	Texture normals("./Models/Chair/Regency_low_my_Divani_Chester_nuovi_regency_mat_Normal.png");
+#pragma endregion
+
 
 	// Game Loop
 	while (glfwWindowShouldClose(window) == false && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
@@ -123,9 +137,23 @@ int main()
 		// ---Colour---
 		glm::vec4 color = glm::vec4(0.0f, 1.0f, 1.0f, 1.0f); // Set colour of cube
 		pshader->use();
+		// Render the diffuse texture
+		glActiveTexture(GL_TEXTURE0 + 0); // Texture unit 0
+		glBindTexture(GL_TEXTURE_2D, diffuse.texture);
+		// Render the normal texture
+		//glActiveTexture(GL_TEXTURE0 + 1); // Texture unit 0
+		//glBindTexture(GL_TEXTURE_2D, normal.texture);
+
 		pshader->setMat4("projection_view_matrix", main_camera.get_projection_view_transform());
 		pshader->setMat4("model_matrix", model);
+		pshader->setMat3("normal_matrix", glm::inverseTranspose(
+			glm::mat3(glm::vec3(model[0]),
+					  glm::vec3(model[1]),
+					  glm::vec3(model[2]))));
 		pshader->setVec4("color", color);
+		pshader->setVec3("camera_position", main_camera.get_position());
+		pshader->setVec3("light_direction", pshader->m_light.direction);
+
 		obj_mesh.draw();
 		//plane->draw(pshader/*, texture_1*/); 
 

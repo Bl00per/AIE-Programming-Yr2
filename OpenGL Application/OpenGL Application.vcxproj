@@ -168,6 +168,7 @@
   <ItemGroup>
     <None Include="Shaders\simple_frag.glsl" />
     <None Include="Shaders\simple_vertex.glsl" />
+    <None Include="Shaders\textured_frag_shader.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

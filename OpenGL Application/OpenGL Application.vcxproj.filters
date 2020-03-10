@@ -82,5 +82,8 @@
     <None Include="Shaders\simple_vertex.glsl">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="Shaders\textured_frag_shader.glsl">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
