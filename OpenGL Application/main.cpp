@@ -13,6 +13,7 @@
 
 using uint = unsigned int;
 
+
 void PrintErrorLog(uint ID);
 //void process_input(GLFWwindow* window);
 //void mouse_callback(GLFWwindow* window, double x_pos, double y_pos);
@@ -88,6 +89,9 @@ int main()
 
 #pragma region Shader
 	Shader* pshader = new Shader(".\\Shaders\\simple_vertex.glsl", ".\\Shaders\\textured_frag_shader.glsl");
+	pshader->m_light.ambient = { 0.25f, 0.25f, 0.25f };
+	pshader->m_light.diffuse = { 1, 1, 0 };
+	pshader->m_light.specular = { 1, 1, 0 };
 #pragma endregion
 
 
@@ -155,6 +159,10 @@ int main()
 		pshader->setVec4("color", color);
 		pshader->setVec3("camera_position", main_camera.get_position());
 		pshader->setVec3("light_direction", pshader->m_light.direction);
+		
+		pshader->setVec3("Ka", obj_mesh.m_object_material[0].ambient);
+		pshader->setVec3("Kd", obj_mesh.m_object_material[0].diffuse);
+		pshader->setVec3("Ks", obj_mesh.m_object_material[0].specular);
 
 		obj_mesh.draw();
 		//plane->draw(pshader/*, texture_1*/); 

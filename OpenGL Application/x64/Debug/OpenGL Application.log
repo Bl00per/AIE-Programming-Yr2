@@ -1,10 +1,32 @@
-﻿  main.cpp
-C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\main.cpp(104,34): warning C4305: 'argument': truncation from 'double' to 'const T'
+﻿  Mesh.cpp
+C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\Mesh.cpp(58,63): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\Mesh.cpp(65,63): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+  OBJMesh.cpp
+  Primitives.cpp
+  Shader.cpp
+  main.cpp
+C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\main.cpp(108,34): warning C4305: 'argument': truncation from 'double' to 'const T'
           with
           [
               T=float
           ]
-C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\main.cpp(129,14): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\main.cpp(133,30): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\main.cpp(134,16): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\main.cpp(133,14): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\main.cpp(137,30): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\main.cpp(138,16): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  Generating Code...
+glfw3.lib(context.c.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(context.c.obj)' or at 'C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\x64\Debug\glfw.pdb'; linking object as if no debug info
+glfw3.lib(init.c.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(init.c.obj)' or at 'C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\x64\Debug\glfw.pdb'; linking object as if no debug info
+glfw3.lib(input.c.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(input.c.obj)' or at 'C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\x64\Debug\glfw.pdb'; linking object as if no debug info
+glfw3.lib(monitor.c.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(monitor.c.obj)' or at 'C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\x64\Debug\glfw.pdb'; linking object as if no debug info
+glfw3.lib(vulkan.c.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(vulkan.c.obj)' or at 'C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\x64\Debug\glfw.pdb'; linking object as if no debug info
+glfw3.lib(window.c.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(window.c.obj)' or at 'C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\x64\Debug\glfw.pdb'; linking object as if no debug info
+glfw3.lib(win32_init.c.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(win32_init.c.obj)' or at 'C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\x64\Debug\glfw.pdb'; linking object as if no debug info
+glfw3.lib(win32_joystick.c.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(win32_joystick.c.obj)' or at 'C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\x64\Debug\glfw.pdb'; linking object as if no debug info
+glfw3.lib(win32_monitor.c.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(win32_monitor.c.obj)' or at 'C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\x64\Debug\glfw.pdb'; linking object as if no debug info
+glfw3.lib(win32_time.c.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(win32_time.c.obj)' or at 'C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\x64\Debug\glfw.pdb'; linking object as if no debug info
+glfw3.lib(win32_thread.c.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(win32_thread.c.obj)' or at 'C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\x64\Debug\glfw.pdb'; linking object as if no debug info
+glfw3.lib(win32_window.c.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(win32_window.c.obj)' or at 'C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\x64\Debug\glfw.pdb'; linking object as if no debug info
+glfw3.lib(wgl_context.c.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(wgl_context.c.obj)' or at 'C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\x64\Debug\glfw.pdb'; linking object as if no debug info
+glfw3.lib(egl_context.c.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(egl_context.c.obj)' or at 'C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\x64\Debug\glfw.pdb'; linking object as if no debug info
+glfw3.lib(osmesa_context.c.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(osmesa_context.c.obj)' or at 'C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\x64\Debug\glfw.pdb'; linking object as if no debug info
   OpenGL Application.vcxproj -> C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\x64\Debug\OpenGL Application.exe
