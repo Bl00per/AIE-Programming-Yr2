@@ -5,8 +5,9 @@
 Texture::Texture(std::string a_texture_name)
 {
 	int x, y, n;
+	stbi_set_flip_vertically_on_load(true);
 	unsigned char* data = stbi_load(a_texture_name.c_str(), &x, &y, &n, 0);
-
+	
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
 

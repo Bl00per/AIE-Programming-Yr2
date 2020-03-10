@@ -3,6 +3,7 @@
 
 in vec4 v_position;
 in vec3 v_normal; 
+in vec3 v_tangent;
 
 uniform sampler2D diffuse_texture;
 uniform sampler2D normal_texture; 
@@ -18,6 +19,13 @@ void main()
 {
 	//Ensure normal and light direction are normalised 
 	vec3 N = normalize(v_normal);
+	vec3 T = normalize(v_tangent);
+	vec3 B = cross(v_normal, v_tangent);
+
+	mat3 TBN = mat3(T, B, N);
+	vec3 normals = texture2D(normal_texture, final_texture_coordinates).xyz * 2 - 1;
+	N = TBN * normals;
+
 	vec3 L = normalize(light_direction);
 
 	//Calculate lambert term (negate light direction)
@@ -32,6 +40,7 @@ void main()
 
 	//Calculate each colour property
 	vec3 diffuse = texture2D(diffuse_texture, final_texture_coordinates).xyz * lambert_term;
+	
 	vec3 specular = vec3(specular_term, specular_term, specular_term);
 
 	//vec4 col = texture(diffuse_texture, final_texture_coodinates);
@@ -42,5 +51,6 @@ void main()
 	//frag_colour = vec4(v_normal, 1);
 	//vec4 result = vec4(diffuse + specular, 1); 
 	//frag_colour = (result + col);
-	frag_colour = vec4(diffuse + specular, 1);
+	//frag_colour = vec4(diffuse + normals + specular, 1);
+	frag_colour = vec4(specular + diffuse, 1);
 }

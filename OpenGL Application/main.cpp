@@ -116,6 +116,8 @@ int main()
 	glUniform1i(diffuse_location, 0);
 
 	Texture normals("./Models/Chair/Regency_low_my_Divani_Chester_nuovi_regency_mat_Normal.png");
+	int normals_location = glGetUniformLocation(pshader->shader_ID, "normal_texture");
+	glUniform1i(normals_location, 1);
 #pragma endregion
 
 
@@ -141,15 +143,15 @@ int main()
 		glActiveTexture(GL_TEXTURE0 + 0); // Texture unit 0
 		glBindTexture(GL_TEXTURE_2D, diffuse.texture);
 		// Render the normal texture
-		//glActiveTexture(GL_TEXTURE0 + 1); // Texture unit 0
-		//glBindTexture(GL_TEXTURE_2D, normal.texture);
+		glActiveTexture(GL_TEXTURE0 + 1); // Texture unit 1
+		glBindTexture(GL_TEXTURE_2D, normals.texture);
 
 		pshader->setMat4("projection_view_matrix", main_camera.get_projection_view_transform());
 		pshader->setMat4("model_matrix", model);
-		pshader->setMat3("normal_matrix", glm::inverseTranspose(
-			glm::mat3(glm::vec3(model[0]),
-					  glm::vec3(model[1]),
-					  glm::vec3(model[2]))));
+		glm::mat3 normal_matrix = { glm::normalize(glm::vec3(model[0])),
+									glm::normalize(glm::vec3(model[1])),
+									glm::normalize(glm::vec3(model[2])) };
+		pshader->setMat3("normal_matrix", glm::inverseTranspose(normal_matrix));
 		pshader->setVec4("color", color);
 		pshader->setVec3("camera_position", main_camera.get_position());
 		pshader->setVec3("light_direction", pshader->m_light.direction);

@@ -7,6 +7,7 @@ layout(location = 3) in vec4 tangent;
 
 out vec4 v_position;
 out vec3 v_normal;
+out vec3 v_tangent;
 
 uniform mat4 projection_view_matrix;
 uniform mat4 model_matrix; 
@@ -21,5 +22,6 @@ void main()
 	final_texture_coordinates = texture_coordinates;
 	v_position = model_matrix * local_position;
 	v_normal = normal_matrix * normal.xyz;
+	v_tangent = normal_matrix * tangent.xyz;
 	gl_Position = (projection_view_matrix * model_matrix) * local_position;
 }
