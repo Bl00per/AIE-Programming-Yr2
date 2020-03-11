@@ -11,14 +11,15 @@ uniform sampler2D normal_texture;
 uniform vec3 Ka;	//Ambient mat colour
 uniform vec3 Kd;	//Diffuse mat colour
 uniform vec3 Ks;	//Specular mat colour
-uniform float specular_power = 32;	//Mat specular power
+//uniform float specular_power = 32;
+uniform float specular_power;	//Mat specular power
 
 uniform vec3 Ia;	//Ambient light colour
 uniform vec3 Id;	//Diffuse light colour
 uniform vec3 Is;	//Specular light colour 
 
-uniform vec3 light_direction;
 uniform vec3 camera_position; 
+uniform vec3 light_direction;
 
 in vec2 final_texture_coordinates;
 out vec4 frag_colour; 
@@ -46,16 +47,19 @@ void main()
 	//Calculate specular term
 	float specular_term = pow(max(0, dot(R, V)), specular_power); 
 
+	vec3 diffuse_texture = texture2D(diffuse_texture, final_texture_coordinates).xyz;
+	
 	//Calculate each colour property
 	vec3 ambient = Ia * Ka;
 	//vec3 diffuse = texture2D(diffuse_texture, final_texture_coordinates).xyz * lambert_term;
 	//vec3 specular = vec3(specular_term, specular_term, specular_term);
-	vec3 diffuse = Id * Kd * texture2D(diffuse_texture, final_texture_coordinates).xyz * lambert_term;
+	vec3 diffuse = Id * Kd * diffuse_texture * lambert_term;
 	vec3 specular = Is * Ks * vec3(specular_term, specular_term, specular_term);
 
 	//vec4 col = texture(diffuse_texture, final_texture_coodinates);
 	//if (col.a < 0.0001)
 	//	discard;
 	frag_colour = vec4(ambient + diffuse + specular, 1);
-	//frag_colour = vec4(specular + diffuse, 1);
+	//frag_colour = vec4(1, 0, 0, 1);
+	//frag_colour = vec4(Ka, 1);
 }

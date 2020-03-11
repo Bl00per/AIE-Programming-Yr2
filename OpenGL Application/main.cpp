@@ -20,14 +20,15 @@ void PrintErrorLog(uint ID);
 //void scroll_callback(GLFWwindow* window, double x_offset, double y_offset);
 
 // Delta time
-float delta_time = 0.0f;
-float last_frame = 0.0f;
+double delta_time = 0.0f;
+double last_frame = 0.0f;
 
 // Settings
 int width, height;
-
 const unsigned int SCR_WIDTH = width;
 const unsigned int SCR_HEIGHT = height;
+
+bool pause_camera = false;
 
 // Camera
 free_camera main_camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f));
@@ -72,66 +73,76 @@ int main()
 	glfwGetWindowSize(window, &width, &height);
 #pragma endregion
 
-#pragma region Old Camera
-	//glm::vec3 camera_target = glm::vec3(0.0f, 0.0f, 0.0f);
-	//glm::vec3 camera_direction = glm::normalize(camera_pos - camera_target);
-	//glm::vec3 camera_right = glm::normalize(glm::cross(camera_up, camera_direction));
-
-	//glm::mat4 view;
-	//view = glm::lookAt(
-	//	glm::vec3(0.0f, 0.0f, 3.0f),
-	//	glm::vec3(0.0f, 0.0f, 0.0f),
-	//	glm::vec3(0.0f, 1.0f, 0.0f));
-
-	//glm::mat4 projection = glm::perspective(1.507f, 16 / 9.0f, 0.1f, 5.0f);
-	//glm::mat4 view = glm::lookAt(glm::vec3(0, 0, 1), glm::vec3(0), glm::vec3(0, 1, 0));
-#pragma endregion
-
 #pragma region Shader
-	Shader* pshader = new Shader(".\\Shaders\\simple_vertex.glsl", ".\\Shaders\\textured_frag_shader.glsl");
-	pshader->m_light.ambient = { 0.25f, 0.25f, 0.25f };
-	pshader->m_light.diffuse = { 1, 1, 0 };
-	pshader->m_light.specular = { 1, 1, 0 };
+	Shader* cshader = new Shader(".\\Shaders\\simple_vertex.glsl", ".\\Shaders\\textured_frag_shader.glsl");
+	Shader* bshader = new Shader(".\\Shaders\\simple_vertex.glsl", ".\\Shaders\\simple_frag.glsl");
+	
+	// ---CHAIR---
+	cshader->m_light.ambient = { 0.1f, 0.1f, 0.1f }; 	// Dark grey ambient
+	// White Light
+	cshader->m_light.diffuse = { 1, 1, 1 };
+	cshader->m_light.specular = { 1, 1, 1 };
+
+	// ---BUNBUN---
+	bshader->m_light.ambient = { 0.1f, 0.1f, 0.1f }; 	// Dark grey ambient
+	// White Light
+	bshader->m_light.diffuse = { 1, 1, 1 };
+	bshader->m_light.specular = { 1, 1, 1 };
 #pragma endregion
 
-
-	// Model
-	aie::OBJMesh obj_mesh;
+#pragma region Model
+	aie::OBJMesh chair_mesh;
+	aie::OBJMesh bunbun_mesh;
+	//Override the materials here because they aren't getting loaded from an mtl file.
+	//obj_mesh.m_object_material[0].ambient = glm::vec3(1, 1, 1);
+	//obj_mesh.m_object_material[0].diffuse = glm::vec3(1, 1, 1);
+	//obj_mesh.m_object_material[0].specular = glm::vec3(1, 1, 1);
 	//Mesh* cube = Primitives::cube();
-	Mesh* plane = Primitives::plane();
-	obj_mesh.load("./Models/Chair/Regency_low_optimized.obj", false);
+	//Mesh* plane = Primitives::plane();
+	chair_mesh.load("./Models/Chair/Regency_low_optimized.obj", false);
+	bunbun_mesh.load("./Models/Bunny.obj");
 
-	glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // Background Colour
 
-	// ---Model---
-	// glm::mat4 model = glm::mat4(1);
-	glm::mat4 model = glm::mat4(0.01);
-	model[3][3] = 1.0f; // Resetting model position cause it's tiny
+	glm::mat4 chair_model = glm::mat4(0.01);
+	chair_model[3][3] = 1.0f; // Resetting model position cause it's tiny
+	glm::mat4 bunbun_model = glm::mat4(1);
+#pragma endregion
 
 #pragma region Texture
-	Texture* texture_1 = new Texture(".\\Textures\\unknown.png");
+	//Texture* texture_1 = new Texture(".\\Textures\\unknown.png");
 
 	// Diffuse Texture
 	Texture diffuse("./Models/Chair/Regency_low_my_Divani_Chester_nuovi_regency_mat_Diffuse.png");
 	// Initialize our shader
-	pshader->use();
+	cshader->use();
 	// Initialize our diffuse texture
-	int diffuse_location = glGetUniformLocation(pshader->shader_ID, "diffuse_texture");
+	int diffuse_location = glGetUniformLocation(cshader->shader_ID, "diffuse_texture");
 	glUniform1i(diffuse_location, 0);
 
+	// Normals texture
 	Texture normals("./Models/Chair/Regency_low_my_Divani_Chester_nuovi_regency_mat_Normal.png");
-	int normals_location = glGetUniformLocation(pshader->shader_ID, "normal_texture");
+	// Initialize our normals texture
+	int normals_location = glGetUniformLocation(cshader->shader_ID, "normal_texture");
 	glUniform1i(normals_location, 1);
 #pragma endregion
 
-
+	glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // Background Colour
 	// Game Loop
 	while (glfwWindowShouldClose(window) == false && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		
+
 		float time = glfwGetTime();
-		pshader->m_light.direction = glm::normalize(glm::vec3(glm::cos(time * 2), glm::sin(time * 2), 0));
+
+		if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+			pause_camera = !pause_camera;
+
+		if (pause_camera)
+		{
+			glm::vec3 paused_direction = glm::normalize(glm::vec3(1, 1, 1));
+		}
+		else
+			cshader->m_light.direction = glm::normalize(glm::vec3(glm::cos((time) * 2), glm::sin((time) * 2), 0));
 
 		double current_frame = glfwGetTime();
 		delta_time = current_frame - last_frame;
@@ -140,9 +151,8 @@ int main()
 		// ---Camera---
 		main_camera.update(delta_time);
 
-		// ---Colour---
-		glm::vec4 color = glm::vec4(0.0f, 1.0f, 1.0f, 1.0f); // Set colour of cube
-		pshader->use();
+		// ---Texturing---
+		cshader->use();
 		// Render the diffuse texture
 		glActiveTexture(GL_TEXTURE0 + 0); // Texture unit 0
 		glBindTexture(GL_TEXTURE_2D, diffuse.texture);
@@ -150,23 +160,46 @@ int main()
 		glActiveTexture(GL_TEXTURE0 + 1); // Texture unit 1
 		glBindTexture(GL_TEXTURE_2D, normals.texture);
 
-		pshader->setMat4("projection_view_matrix", main_camera.get_projection_view_transform());
-		pshader->setMat4("model_matrix", model);
-		glm::mat3 normal_matrix = { glm::normalize(glm::vec3(model[0])),
-									glm::normalize(glm::vec3(model[1])),
-									glm::normalize(glm::vec3(model[2])) };
-		pshader->setMat3("normal_matrix", glm::inverseTranspose(normal_matrix));
-		pshader->setVec4("color", color);
-		pshader->setVec3("camera_position", main_camera.get_position());
-		pshader->setVec3("light_direction", pshader->m_light.direction);
-		
-		pshader->setVec3("Ka", obj_mesh.m_object_material[0].ambient);
-		pshader->setVec3("Kd", obj_mesh.m_object_material[0].diffuse);
-		pshader->setVec3("Ks", obj_mesh.m_object_material[0].specular);
+		// ---CHAIR---
+		// PVM
+		cshader->setMat4("projection_view_matrix", main_camera.get_projection_view_transform());
+		cshader->setMat4("model_matrix", chair_model);
+		glm::mat3 chair_normal_matrix = { glm::normalize(glm::vec3(chair_model[0])),
+									glm::normalize(glm::vec3(chair_model[1])),
+									glm::normalize(glm::vec3(chair_model[2])) };
+		cshader->setMat3("normal_matrix", glm::inverseTranspose(chair_normal_matrix));
+		cshader->setVec3("camera_position", main_camera.get_position());
+		cshader->setVec3("light_direction", cshader->m_light.direction);
 
-		obj_mesh.draw();
+		// Material Colour
+		cshader->setVec3("Ka", glm::vec3(1, 1, 1));
+		cshader->setVec3("Kd", glm::vec3(1, 1, 1));
+		cshader->setVec3("Ks", glm::vec3(1, 1, 1));
+		cshader->setFloat("specular_power", 32.0f);
+
+		// Light Colour
+		cshader->setVec3("Ia", cshader->m_light.ambient);
+		cshader->setVec3("Id", cshader->m_light.diffuse);
+		cshader->setVec3("Is", cshader->m_light.specular);
+
+
+
+		// ---BUNBUN---
+		// PVM
+		bshader->setMat4("projection_view_matrix", main_camera.get_projection_view_transform());
+		bshader->setMat4("model_matrix", bunbun_model);
+		glm::mat3 bun_normal_matrix = { glm::normalize(glm::vec3(bunbun_model[0])),
+									glm::normalize(glm::vec3(bunbun_model[1])),
+									glm::normalize(glm::vec3(bunbun_model[2])) };
+		bshader->setMat3("normal_matrix", glm::inverseTranspose(bun_normal_matrix));
+		bshader->setVec3("camera_position", main_camera.get_position());
+		bshader->setVec3("light_direction", bshader->m_light.direction);
+		cshader->setFloat("specular_power", 32.0f);
+
+
+		chair_mesh.draw();
+		bunbun_mesh.draw();
 		//plane->draw(pshader/*, texture_1*/); 
-
 
 #pragma region Wireframe Mode
 		//static unsigned char wireframe;
@@ -207,42 +240,3 @@ void PrintErrorLog(uint ID)
 	// Clean up anyway
 	delete[] log;
 }
-
-//void process_input(GLFWwindow* window)
-//{
-//	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-//		main_camera.process_keyboard(camera_movement::FORWARD, delta_time);
-//	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-//		main_camera.process_keyboard(camera_movement::BACKWARD, delta_time);
-//	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-//		main_camera.process_keyboard(camera_movement::LEFT, delta_time);
-//	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-//		main_camera.process_keyboard(camera_movement::RIGHT, delta_time);
-//	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-//		main_camera.process_keyboard(camera_movement::UP, delta_time);
-//	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-//		main_camera.process_keyboard(camera_movement::DOWN, delta_time);
-//}
-//
-//void mouse_callback(GLFWwindow* window, double x_pos, double y_pos)
-//{
-//	if (first_mouse)
-//	{
-//		last_x = x_pos;
-//		last_y = y_pos;
-//		first_mouse = false;
-//	}
-//
-//	float x_offset = x_pos - last_x;
-//	float y_offset = last_y - y_pos; // reversed since y-coordinates go from bottom to top
-//
-//	last_x = x_pos;
-//	last_y = y_pos;
-//
-//	main_camera.process_mouse_movement(x_offset, y_offset);
-//}
-
-//void scroll_callback(GLFWwindow* window, double x_offset, double y_offset)
-//{
-//	main_camera.process_mouse_scroll(y_offset);
-//}
