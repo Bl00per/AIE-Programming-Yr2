@@ -103,9 +103,12 @@ int main()
 	bunbun_mesh.load("./Models/Bunny.obj");
 
 
+	glm::mat4 bunbun_model = glm::mat4(0.049);
+	bunbun_model[3][1] = 0.43f; // Y
+	bunbun_model[3][2] = 0.1f; // Z
+	bunbun_model[3][3] = 1.0f;
 	glm::mat4 chair_model = glm::mat4(0.01);
 	chair_model[3][3] = 1.0f; // Resetting model position cause it's tiny
-	glm::mat4 bunbun_model = glm::mat4(1);
 #pragma endregion
 
 #pragma region Texture
@@ -182,9 +185,11 @@ int main()
 		cshader->setVec3("Id", cshader->m_light.diffuse);
 		cshader->setVec3("Is", cshader->m_light.specular);
 
+		chair_mesh.draw();
 
 
 		// ---BUNBUN---
+		bshader->use();
 		// PVM
 		bshader->setMat4("projection_view_matrix", main_camera.get_projection_view_transform());
 		bshader->setMat4("model_matrix", bunbun_model);
@@ -193,11 +198,12 @@ int main()
 									glm::normalize(glm::vec3(bunbun_model[2])) };
 		bshader->setMat3("normal_matrix", glm::inverseTranspose(bun_normal_matrix));
 		bshader->setVec3("camera_position", main_camera.get_position());
-		bshader->setVec3("light_direction", bshader->m_light.direction);
-		cshader->setFloat("specular_power", 32.0f);
+		bshader->setVec3("light_direction", cshader->m_light.direction);
+		bshader->setFloat("specular_power", 32.0f);
 
 
-		chair_mesh.draw();
+
+
 		bunbun_mesh.draw();
 		//plane->draw(pshader/*, texture_1*/); 
 
@@ -218,6 +224,12 @@ int main()
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
+
+	// Exterminate the memory leaks
+	delete cshader;
+	cshader = nullptr;
+	delete bshader;
+	bshader = nullptr;
 
 	glfwTerminate();
 	return 0;
