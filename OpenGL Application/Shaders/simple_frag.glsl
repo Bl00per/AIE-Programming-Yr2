@@ -8,6 +8,7 @@ uniform sampler2D diffuse_texture;
 
 uniform float specular_power;
 
+uniform vec4 color;
 uniform vec3 camera_position; 
 uniform vec3 light_direction;
 
@@ -34,6 +35,6 @@ void main()
 	vec3 diffuse = vec3(lambert_term, lambert_term, lambert_term);
 	vec3 specular = vec3(specular_term, specular_term, specular_term);
 
+	//frag_colour = vec4(diffuse + specular, 1) + color;
 	frag_colour = vec4(diffuse + specular, 1);
-	frag_colour = vec4(L, 1);
 }

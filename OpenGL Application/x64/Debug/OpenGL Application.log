@@ -1,13 +1,13 @@
 ﻿  main.cpp
-C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\main.cpp(106,42): warning C4305: 'argument': truncation from 'double' to 'const T'
+D:\Will Hart\Documents\.repo\AIE-Programming-Yr2\OpenGL Application\main.cpp(106,42): warning C4305: 'argument': truncation from 'double' to 'const T'
           with
           [
               T=float
           ]
-C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\main.cpp(110,40): warning C4305: 'argument': truncation from 'double' to 'const T'
+D:\Will Hart\Documents\.repo\AIE-Programming-Yr2\OpenGL Application\main.cpp(110,40): warning C4305: 'argument': truncation from 'double' to 'const T'
           with
           [
               T=float
           ]
-C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\main.cpp(138,14): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-  OpenGL Application.vcxproj -> C:\Users\s172172\Desktop\AIE-Programming-Yr2\OpenGL Application\x64\Debug\OpenGL Application.exe
+D:\Will Hart\Documents\.repo\AIE-Programming-Yr2\OpenGL Application\main.cpp(138,14): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  OpenGL Application.vcxproj -> D:\Will Hart\Documents\.repo\AIE-Programming-Yr2\OpenGL Application\x64\Debug\OpenGL Application.exe

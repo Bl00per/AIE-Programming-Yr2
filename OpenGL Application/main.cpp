@@ -84,7 +84,7 @@ int main()
 	cshader->m_light.specular = { 1, 1, 1 };
 
 	// ---BUNBUN---
-	bshader->m_light.ambient = { 0.1f, 0.1f, 0.1f }; 	// Dark grey ambient
+	bshader->m_light.ambient = { 0.25f, 0.25f, 0.25f }; 	// Dark grey ambient
 	// White Light
 	bshader->m_light.diffuse = { 1, 1, 1 };
 	bshader->m_light.specular = { 1, 1, 1 };
@@ -189,6 +189,7 @@ int main()
 
 
 		// ---BUNBUN---
+		glm::vec4 color = glm::vec4(0.8f, 0.2f, 0.8f, 1.0f); // Set colour of bunbun
 		bshader->use();
 		// PVM
 		bshader->setMat4("projection_view_matrix", main_camera.get_projection_view_transform());
@@ -197,6 +198,7 @@ int main()
 									glm::normalize(glm::vec3(bunbun_model[1])),
 									glm::normalize(glm::vec3(bunbun_model[2])) };
 		bshader->setMat3("normal_matrix", glm::inverseTranspose(bun_normal_matrix));
+		bshader->setVec4("color", color);
 		bshader->setVec3("camera_position", main_camera.get_position());
 		bshader->setVec3("light_direction", cshader->m_light.direction);
 		bshader->setFloat("specular_power", 32.0f);
