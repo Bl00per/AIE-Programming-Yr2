@@ -203,9 +203,6 @@ int main()
 		bshader->setVec3("light_direction", cshader->m_light.direction);
 		bshader->setFloat("specular_power", 32.0f);
 
-
-
-
 		bunbun_mesh.draw();
 		//plane->draw(pshader/*, texture_1*/); 
 
