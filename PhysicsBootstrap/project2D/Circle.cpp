@@ -1,18 +1,27 @@
-#include "Circle.h"
+#include "circle.h"
+#include <cmath>
 
-Circle::Circle(glm::vec2 position, glm::vec2 velocity, float mass, float radius, glm::vec4 colour) : 
-	RigidBody(CIRCLE, position, velocity, mass)
+circle::circle(const float a_radius, const glm::vec2& a_position) : 
+	RigidBody(ShapeType::CIRCLE, a_position), 
+	m_radius(a_radius)
+{}
+
+const float circle::getRadius() const
 {
-	m_radius = radius;
-	m_colour = colour;
+	return m_radius;
+}
+void circle::setRadius(const float a_radius)
+{
+	m_radius = abs(a_radius);
 }
 
-void Circle::makeGizmo()
+const glm::vec2 circle::getPosition() const
 {
-	aie::Gizmos::add2DCircle(m_position, m_radius, m_mass, m_colour);
+	return m_position;
 }
 
-bool Circle::checkCollision(PhysicsObject* pOther)
+void circle::setPosition(const glm::vec2& a_position)
 {
-	
+	m_position = a_position;
 }
+

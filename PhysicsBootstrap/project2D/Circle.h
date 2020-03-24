@@ -1,25 +1,24 @@
-#include "RigidBody.h"
-#include "Gizmos.h"
-
 #pragma once
-#ifndef _CIRCLE_H_
-#define _CIRCLE_H_
+#include "RigidBody.h"
 
-class Circle : public RigidBody
+class circle : public RigidBody
 {
 public:
-	Circle(glm::vec2 position, glm::vec2 velocity, float mass, float radius, glm::vec4 colour);
-	~Circle();
 
-	virtual void makeGizmo();
-	virtual bool checkCollision(PhysicsObject* pOther);
+	circle(const float a_radius, const glm::vec2& a_position = glm::vec2(0.0f));
 
-	float getRadius() { return m_radius; }
-	glm::vec4 getColour() { return m_colour; }
+	const float getRadius() const;
+	
+	/*	@brief Sets the radius to the absolute value of the argument
+		@param The new radius as float
+	*/
+	void setRadius(const float a_radius);
 
-protected:
-	float m_radius;
-	glm::vec4 m_colour;
+	const glm::vec2 getPosition() const;
+	void setPosition(const glm::vec2& a_position);
+
+private:
+	float m_radius = 0.0f;
 };
 
-#endif // !_CIRCLE_H_
+

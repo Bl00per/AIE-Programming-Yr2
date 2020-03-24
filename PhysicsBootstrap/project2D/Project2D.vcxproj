@@ -120,14 +120,14 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)bootstrap;$(SolutionDir)dependencies/imgui;$(SolutionDir)dependencies/glm;$(SolutionDir)/dependencies/maths;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)bootstrap;$(SolutionDir)dependencies/imgui;$(SolutionDir)dependencies/glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>maths.lib;bootstrap.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)dependencies\Bootstrap\$(Platform)\$(Configuration)\;$(SolutionDir)dependencies\maths;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>bootstrap.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)dependencies\Bootstrap\$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -172,20 +172,22 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\bootstrap\PhysicsScene.cpp" />
-    <ClCompile Include="AABB.cpp" />
+    <ClCompile Include="alignedBoundingBox.cpp" />
     <ClCompile Include="Application2D.cpp" />
     <ClCompile Include="Circle.cpp" />
+    <ClCompile Include="collision_manager.cpp" />
+    <ClCompile Include="line.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Plane.cpp" />
     <ClCompile Include="RigidBody.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\bootstrap\PhysicsObject.h" />
     <ClInclude Include="..\bootstrap\PhysicsScene.h" />
-    <ClInclude Include="AABB.h" />
+    <ClInclude Include="alignedBoundingBox.h" />
     <ClInclude Include="Application2D.h" />
     <ClInclude Include="Circle.h" />
-    <ClInclude Include="Plane.h" />
+    <ClInclude Include="collision_manager.h" />
+    <ClInclude Include="line.h" />
     <ClInclude Include="RigidBody.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
