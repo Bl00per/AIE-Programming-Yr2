@@ -3,9 +3,12 @@
 #include "Font.h"
 #include "Input.h"
 #include "Gizmos.h"
+
 #include "glm/glm.hpp"
 #include "glm/ext.hpp"
+
 #include "PhysicsScene.h"
+#include "Circle.h"
 
 Application2D::Application2D()
 {
@@ -20,9 +23,9 @@ Application2D::~Application2D()
 bool Application2D::startup()
 {
 	aie::Gizmos::create(255U, 255U, 65535U, 65535U);
-	aie::Gizmos::add2DCircle(glm::vec2{ 0,0 }, 4.0f, 32, glm::vec4{ 1.0f, 0,0,1.0f });
-	aie::Gizmos::add2DAABB(glm::vec2{ 10,0 }, glm::vec2{ 2.5f, 2.5f }, glm::vec4{ 0, 0, 1.0f,1.0f });
-	aie::Gizmos::add2DLine(glm::vec2{ -12, 4 }, glm::vec2{ -8, -4 }, glm::vec4{ 1.0f, 0, 1.0f, 1.0f });
+	//aie::Gizmos::add2DCircle(glm::vec2{ 0,0 }, 4.0f, 32, glm::vec4{ 1.0f, 0,0,1.0f });
+	//aie::Gizmos::add2DAABB(glm::vec2{ 10,0 }, glm::vec2{ 2.5f, 2.5f }, glm::vec4{ 0, 0, 1.0f,1.0f });
+	//aie::Gizmos::add2DLine(glm::vec2{ -12, 4 }, glm::vec2{ -8, -4 }, glm::vec4{ 1.0f, 0, 1.0f, 1.0f });
 
 	m_2dRenderer = new aie::Renderer2D();
 
@@ -33,6 +36,13 @@ bool Application2D::startup()
 
 	m_physicsScene = new PhysicsScene();
 	m_physicsScene->setTimeStep(0.01f);
+	m_physicsScene->setGravity(glm::vec2(0.0f));
+
+	star = new circle(glm::vec2(-8.0f, -8.0f), glm::vec2(0.0f), 5.0f, 2.0f, glm::vec4(1.0f, 1.0f, 0.0f, 1.0f));
+	earth = new circle(glm::vec2(4.0f), glm::vec2(0.0f), 1.0f, 0.5f, glm::vec4(0, 0.5f, 1.0f, 1.0f));
+
+	m_physicsScene->addObject(star);
+	m_physicsScene->addObject(earth);
 
 	m_timer = 0;
 
@@ -75,12 +85,21 @@ void Application2D::update(float deltaTime)
 
 	m_2dRenderer->setCameraPos(camPosX, camPosY);
 
+	if (input->isKeyDown(aie::INPUT_KEY_SPACE))
+	{
+		//m_physicsScene->setGravity(glm::vec2(0.0f, -1.0f));
+		star->applyForce(glm::vec2(10.0f));
+		//earth->applyForce(glm::vec2(-5.0f));
+	}
+
+
 	// exit the application
 	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))
 		quit();
 
 	// Physics update and mesh batching
 	aie::Gizmos::clear();
+
 	m_physicsScene->update(deltaTime);
 	m_physicsScene->updateGizmos();
 }

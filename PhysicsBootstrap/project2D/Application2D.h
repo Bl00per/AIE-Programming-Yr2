@@ -4,6 +4,7 @@
 #include "Renderer2D.h"
 
 class PhysicsScene;
+class circle;
 
 class Application2D : public aie::Application {
 public:
@@ -25,6 +26,9 @@ protected:
 	aie::Font*			m_font;
 
 	PhysicsScene* m_physicsScene;
+
+	circle* star;
+	circle* earth;
 
 	float m_timer;
 };

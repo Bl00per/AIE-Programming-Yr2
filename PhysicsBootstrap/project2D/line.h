@@ -1,6 +1,6 @@
 #pragma once
 #include "PhysicsObject.h"
-#include "glm.hpp"
+#include "glm/glm.hpp"
 
 class line : public PhysicsObject
 {

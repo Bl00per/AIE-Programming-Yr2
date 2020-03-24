@@ -1,4 +1,6 @@
 #include "PhysicsScene.h"
+#include "RigidBody.h"
+#include <list>
 
 PhysicsScene::PhysicsScene() : m_timeStep(0.01f), m_gravity(glm::vec2(0,0))
 {
@@ -26,9 +28,8 @@ void PhysicsScene::removeObject(PhysicsObject* object)
 }
 
 void PhysicsScene::update(float deltaTime)
-{
+{	
 	// update physics at a fixed time step
-	
 	static float accumulatedTime = 0.0f;
 	accumulatedTime += deltaTime;
 
@@ -39,7 +40,35 @@ void PhysicsScene::update(float deltaTime)
 			pObject->fixedUpdate(m_gravity, m_timeStep);
 		}
 		
-		accumulatedTime -= m_timeStep;}
+		accumulatedTime -= m_timeStep;
+	}
+
+	static std::list<PhysicsObject*> dirty;
+
+	for (auto pObject : m_objects)
+	{
+		for (auto pOtherObject : m_objects)
+		{
+			if (pObject == pOtherObject)
+				continue;
+
+			if (std::find(dirty.begin(), dirty.end(), pObject) != dirty.end() &&
+				std::find(dirty.begin(), dirty.end(), pOtherObject) != dirty.end())
+				continue;
+
+			RigidBody* pRigidBody = dynamic_cast<RigidBody*>(pOtherObject);
+
+			if (pRigidBody->checkCollision(pObject))
+			{
+				pRigidBody->applySeparationForce(dynamic_cast<RigidBody*>(pObject),
+					pRigidBody->getVelocity() * pRigidBody->getMass());
+
+				dirty.push_back(pRigidBody);
+				dirty.push_back(pOtherObject);
+			}
+		}
+		dirty.clear();
+	}
 }
 
 void PhysicsScene::updateGizmos()
