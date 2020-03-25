@@ -47,6 +47,8 @@ protected:
 	float m_timeStep;
 	glm::vec2 m_gravity;
 	std::vector<PhysicsObject*> m_objects;
+
+	float accumulatedTime = 0.0f;
 };
 
 #endif // !_PHYSICS_SCENE_H_

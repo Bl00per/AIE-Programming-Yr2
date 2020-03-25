@@ -1,10 +1,24 @@
 #include "alignedBoundingBox.h"
+#include "collision_manager.h"
 #include <cmath>
 
-alignedBoundingBox::alignedBoundingBox(const glm::vec2& a_position, const glm::vec2& a_extents) :
-	RigidBody(ShapeType::AABB, a_position),
-	m_extents(a_extents)
+alignedBoundingBox::alignedBoundingBox(const glm::vec2 a_position, glm::vec2 a_velocity, float a_mass, const glm::vec2 a_extents, glm::vec4 a_colour) :
+	RigidBody(ShapeType::AABB, a_position, a_velocity, a_mass),
+	m_extents(a_extents),
+	m_colour(a_colour)
+{}
+
+alignedBoundingBox::~alignedBoundingBox()
+{}
+
+void alignedBoundingBox::makeGizmo()
 {
+	aie::Gizmos::add2DAABBFilled(m_position, m_extents, m_colour);
+}
+
+bool alignedBoundingBox::checkCollision(PhysicsObject* pOther)
+{
+	return collision_manager::aabb_vs_circle(*this, (circle&)*pOther);
 }
 
 const glm::vec2 alignedBoundingBox::getPosition() const

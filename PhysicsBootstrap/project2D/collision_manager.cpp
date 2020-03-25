@@ -10,24 +10,24 @@ bool collision_manager::circle_vs_circle(
 	return (glm::length(displacement) < sum_of_radii);
 }
 
-//bool collision_manager::aabb_vs_aabb(
-//	const alignedBoundingBox& a_aabb_A,
-//	const alignedBoundingBox& a_aabb_B)
-//{
-//	return !(a_aabb_A.getMax().x < a_aabb_B.getMin().x ||
-//			 a_aabb_A.getMin().x > a_aabb_B.getMax().x ||
-//			 a_aabb_A.getMax().y < a_aabb_B.getMin().y ||
-//			 a_aabb_A.getMin().y > a_aabb_B.getMax().y);
-//}
-//
-//bool collision_manager::aabb_vs_circle(
-//	const alignedBoundingBox& a_aabb,
-//	const circle& a_circle)
-//{
-//	glm::vec2 clamped_centre = clamp(a_circle.getPosition(), a_aabb.getMin(), a_aabb.getMax());
-//	glm::vec2 displacement = clamped_centre - a_circle.getPosition();
-//	return (glm::length(displacement) < a_circle.getRadius());
-//}
+bool collision_manager::aabb_vs_aabb(
+	const alignedBoundingBox& a_aabb_A,
+	const alignedBoundingBox& a_aabb_B)
+{
+	return !(a_aabb_A.getMax().x < a_aabb_B.getMin().x ||
+			 a_aabb_A.getMin().x > a_aabb_B.getMax().x ||
+			 a_aabb_A.getMax().y < a_aabb_B.getMin().y ||
+			 a_aabb_A.getMin().y > a_aabb_B.getMax().y);
+}
+
+bool collision_manager::aabb_vs_circle(
+	const alignedBoundingBox& a_aabb,
+	const circle& a_circle)
+{
+	glm::vec2 clamped_centre = clamp(a_circle.getPosition(), a_aabb.getMin(), a_aabb.getMax());
+	glm::vec2 displacement = clamped_centre - a_circle.getPosition();
+	return (glm::length(displacement) < a_circle.getRadius());
+}
 
 //bool collision_manager::circle_vs_line(
 //	const circle& a_circle,

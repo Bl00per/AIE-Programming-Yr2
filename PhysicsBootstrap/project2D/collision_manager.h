@@ -9,12 +9,12 @@ public:
 	static bool circle_vs_circle(const circle& a_circle_A,
 								 const circle& a_circle_B);
 
-	//static bool aabb_vs_aabb(const alignedBoundingBox& a_aabb_A,
-	//						 const alignedBoundingBox& a_aabb_B);
+	static bool aabb_vs_aabb(const alignedBoundingBox& a_aabb_A,
+							 const alignedBoundingBox& a_aabb_B);
 
-	//static bool aabb_vs_circle(const alignedBoundingBox& a_aabb,
-	//						   const circle& a_circle);
-//
+	static bool aabb_vs_circle(const alignedBoundingBox& a_aabb,
+							   const circle& a_circle);
+
 //	static bool circle_vs_line(const circle& a_circle,
 //							   const line& a_line);
 //
