@@ -2,7 +2,7 @@
 #include "collision_manager.h"
 #include <cmath>
 
-alignedBoundingBox::alignedBoundingBox(const glm::vec2 a_position, glm::vec2 a_velocity, float a_mass, const glm::vec2 a_extents, glm::vec4 a_colour) :
+alignedBoundingBox::alignedBoundingBox(const glm::vec2 a_position, glm::vec2 a_velocity, float a_mass, const glm::vec2 a_extents, const glm::vec4 a_colour) :
 	RigidBody(ShapeType::AABB, a_position, a_velocity, a_mass),
 	m_extents(a_extents),
 	m_colour(a_colour)
@@ -13,7 +13,7 @@ alignedBoundingBox::~alignedBoundingBox()
 
 void alignedBoundingBox::makeGizmo()
 {
-	aie::Gizmos::add2DAABBFilled(m_position, m_extents, m_colour);
+	aie::Gizmos::add2DAABBFilled(m_position, m_extents * 0.5f, m_colour);
 }
 
 bool alignedBoundingBox::checkCollision(PhysicsObject* pOther)
@@ -46,7 +46,7 @@ const float alignedBoundingBox::getWidth() const
 	return m_width;
 }
 
-const float alignedBoundingBox::getWeight() const
+const float alignedBoundingBox::getHeight() const
 {
 	return m_height;
 }

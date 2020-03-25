@@ -5,6 +5,7 @@
 
 class PhysicsScene;
 class circle;
+class alignedBoundingBox;
 
 class Application2D : public aie::Application {
 public:
@@ -27,6 +28,7 @@ protected:
 
 	PhysicsScene* m_physicsScene;
 
+	alignedBoundingBox* box;
 	circle* star;
 	circle* earth;
 

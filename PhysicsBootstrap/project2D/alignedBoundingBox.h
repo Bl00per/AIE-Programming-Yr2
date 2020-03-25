@@ -5,7 +5,7 @@ class alignedBoundingBox : public RigidBody
 {
 public:
 	alignedBoundingBox(const glm::vec2 a_position, glm::vec2 a_velocity, 
-		float a_mass, const glm::vec2 a_extents, glm::vec4 a_colour);
+		float a_mass, const glm::vec2 a_extents, const glm::vec4 a_colour);
 	~alignedBoundingBox();
 
 	virtual void makeGizmo();
@@ -19,7 +19,7 @@ public:
 	void setExtents(const glm::vec2& a_extents);
 
 	const float getWidth() const;
-	const float getWeight() const;
+	const float getHeight() const;
 
 	const glm::vec2 getMin() const;
 	const glm::vec2 getMax() const;

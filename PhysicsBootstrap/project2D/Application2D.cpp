@@ -9,6 +9,7 @@
 
 #include "PhysicsScene.h"
 #include "Circle.h"
+#include "alignedBoundingBox.h"
 
 Application2D::Application2D()
 {
@@ -35,32 +36,16 @@ bool Application2D::startup()
 	m_font = new aie::Font("./font/consolas.ttf", 32);
 
 	m_physicsScene = new PhysicsScene();
-	m_physicsScene->setTimeStep(0.032f);
+	m_physicsScene->setTimeStep(0.01f);
 	m_physicsScene->setGravity(glm::vec2(0.0f));
 
-	star = new circle(glm::vec2(-10.0f, 0.0f), glm::vec2(0.0f), 1.0f, 0.1f, glm::vec4(1.0f, 1.0f, 0.0f, 1.0f));
+	star = new circle(glm::vec2(10.0f, 0.0f), glm::vec2(0.0f), 1.0f, 1.0f, glm::vec4(1.0f, 1.0f, 0.0f, 1.0f));
 	//earth = new circle(glm::vec2(10.0f, 0.0f), glm::vec2(0.0f), 1.0f, 0.5f, glm::vec4(0, 0.5f, 1.0f, 1.0f));
+	box = new alignedBoundingBox(glm::vec2(-10.0f, 0.0f), glm::vec2(0.0f), 1.0f, glm::vec2(2.0f), glm::vec4(0.8f, 0.3f, 0.0f, 1.0f));
 
 	m_physicsScene->addObject(star);
+	m_physicsScene->addObject(box);
 	//m_physicsScene->addObject(earth);
-
-	// V = u + at
-	// ^X = ut + 1/2 a t^2
-
-	float u = 10.0f;
-	float a = -10.0f;
-	int samples = 10;
-	float t = 2.0f / samples;
-
-	for (int i = 0; i < samples; i++)
-	{
-		float thisT = t * i;
-		//float x = u * thisT + 0.5f * 0 * (thisT * thisT);
-		float x = u * thisT;
-		float y = u * thisT + 0.5f * a * (thisT * thisT);
-
-		aie::Gizmos::add2DCircle(glm::vec2(-10.0f, 0.0f) + glm::vec2(x, y), 0.1f, 16, glm::vec4(0, 1.0f, 0, 1.0f));
-	}
 
 	m_timer = 0;
 
@@ -106,7 +91,8 @@ void Application2D::update(float deltaTime)
 	if (input->wasKeyPressed(aie::INPUT_KEY_SPACE))
 	{
 		m_physicsScene->setGravity(glm::vec2(0.0f, -10.0f));
-		star->applyForce(glm::vec2(10.0f));
+		box->applyForce(glm::vec2(10.0f));
+		star->applyForce(glm::vec2(-10.0f, 10.0f));
 		//earth->applyForce(glm::vec2(-10.0f, 10.0f));
 	}
 
@@ -115,12 +101,31 @@ void Application2D::update(float deltaTime)
 		quit();
 
 	// Physics update and mesh batching
-	//aie::Gizmos::clear();
+	aie::Gizmos::clear();
 
 	m_physicsScene->update(deltaTime);
 	m_physicsScene->updateGizmos();
 
+	// V = u + at
+	// ^X = ut + 1/2 a t^2
 
+	float u = 10.0f;
+	float a = -10.0f;
+	int samples = 10;
+	float t = 2.0f / samples;
+
+	for (int i = 0; i < samples; i++)
+	{
+		float thisT = t * i;
+		//float x = u * thisT + 0.5f * 0 * (thisT * thisT);
+		float x = u * thisT;
+		float y = u * thisT + 0.5f * a * (thisT * thisT);
+
+		aie::Gizmos::add2DCircle(glm::vec2(-10.0f, 0.0f) + glm::vec2(x, y), 0.1f, 16, glm::vec4(0, 1.0f, 0, 1.0f));
+	}
+
+	aie::Gizmos::add2DCircle(star->getPosition(), star->getRadius() - 0.05f, 16, glm::vec4(1.0f, 0, 0, 1.0f));
+	aie::Gizmos::add2DAABB(box->getPosition(), glm::vec2(box->getHeight(), box->getWidth()) * 0.5f, glm::vec4(0, 0.5f, 1.0f, 1.0f));
 }
 
 void Application2D::draw()

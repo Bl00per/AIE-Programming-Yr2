@@ -171,6 +171,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="alignedBoundingBox.cpp" />
     <ClCompile Include="Application2D.cpp" />
     <ClCompile Include="Circle.cpp" />
     <ClCompile Include="collision_manager.cpp" />
@@ -180,6 +181,7 @@
     <ClCompile Include="RigidBody.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="alignedBoundingBox.h" />
     <ClInclude Include="Application2D.h" />
     <ClInclude Include="Circle.h" />
     <ClInclude Include="collision_manager.h" />
