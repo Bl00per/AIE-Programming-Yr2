@@ -9,7 +9,8 @@ enum class ShapeType : char
 {
 	CIRCLE = 0,
 	AABB,
-	LINE
+	LINE,
+	SHAPECOUNT
 };
 
 class PhysicsObject
@@ -26,6 +27,17 @@ public:
 	virtual void debug() = 0;
 	virtual void makeGizmo() = 0;
 	virtual void resetPosition() {};
+
+	void setColour(glm::vec4 a_color)
+	{
+		color = a_color;
+	}
+	glm::vec4 color = glm::vec4(1.0f);
+
+	ShapeType getShapeID() const
+	{
+		return m_shapeID;
+	}
 };
 
 #endif // !_PHYSICS_OBJECT_H_

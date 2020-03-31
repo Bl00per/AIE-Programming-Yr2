@@ -1,6 +1,10 @@
 #include "glm/glm.hpp"
 #include "PhysicsObject.h"
+#include "collision_manager.h"
 #include <vector>
+
+#include <functional>
+using collisionFunction = std::function<glm::vec2(const PhysicsObject*, const PhysicsObject*)>;
 
 #pragma once
 #ifndef _PHYSICS_SCENE_H_
@@ -49,6 +53,10 @@ protected:
 	std::vector<PhysicsObject*> m_objects;
 
 	float accumulatedTime = 0.0f;
+
+	// function pointer array for doing our collisions
+	static const collisionFunction collisionFunctions[];
 };
+
 
 #endif // !_PHYSICS_SCENE_H_

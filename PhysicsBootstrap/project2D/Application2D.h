@@ -7,6 +7,7 @@ class PhysicsScene;
 class circle;
 class alignedBoundingBox;
 
+
 class Application2D : public aie::Application {
 public:
 
@@ -20,17 +21,14 @@ public:
 	virtual void draw();
 
 protected:
-
 	aie::Renderer2D*	m_2dRenderer;
-	aie::Texture*		m_texture;
-	aie::Texture*		m_shipTexture;
 	aie::Font*			m_font;
 
 	PhysicsScene* m_physicsScene;
 
-	alignedBoundingBox* box;
 	circle* star;
 	circle* earth;
+	alignedBoundingBox* box;
 
 	float m_timer;
 };

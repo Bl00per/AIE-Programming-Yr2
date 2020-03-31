@@ -21,6 +21,11 @@ public:
 	glm::vec2 getVelocity() const { return m_velocity; }
 	float getMass() const { return m_mass; }
 
+	void setVelocity(glm::vec2 a_velocity) { m_velocity = a_velocity; }
+	void setPosition(glm::vec2 a_position) { m_position = a_position; }
+
+	void resolveCollision(RigidBody* a_object, glm::vec2 a_collisionNormal);
+
 protected:
 	RigidBody(ShapeType shapeID, glm::vec2 position, glm::vec2 velocity, float mass);
 

@@ -27,3 +27,18 @@ RigidBody::RigidBody(ShapeType a_shapeID, glm::vec2 a_position, glm::vec2 a_velo
 	m_mass(a_mass)
 {}
 
+void RigidBody::resolveCollision(RigidBody* a_other, glm::vec2 a_collisionNormal)
+{
+	glm::vec2 normal = glm::normalize(a_collisionNormal);
+
+	glm::vec2 relativeVelocity = a_other->getVelocity() - m_velocity;
+
+	float elasticity = 1;
+
+	float j = glm::dot(-(1 + elasticity) * (relativeVelocity), normal) /
+		glm::dot(normal, normal * ((1 / m_mass) + (1 / a_other->getMass())));
+
+	glm::vec2 force = normal * j;
+
+	applySeparationForce(a_other, force);
+}

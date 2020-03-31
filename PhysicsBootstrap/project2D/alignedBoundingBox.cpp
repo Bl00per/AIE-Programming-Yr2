@@ -2,10 +2,9 @@
 #include "collision_manager.h"
 #include <cmath>
 
-alignedBoundingBox::alignedBoundingBox(const glm::vec2 a_position, glm::vec2 a_velocity, float a_mass, const glm::vec2 a_extents, const glm::vec4 a_colour) :
+alignedBoundingBox::alignedBoundingBox(const glm::vec2 a_position, glm::vec2 a_velocity, const float a_mass, const glm::vec2 a_extents/*, const glm::vec4 a_colour*/) :
 	RigidBody(ShapeType::AABB, a_position, a_velocity, a_mass),
-	m_extents(a_extents),
-	m_colour(a_colour)
+	m_extents(a_extents)
 {}
 
 alignedBoundingBox::~alignedBoundingBox()
@@ -13,13 +12,13 @@ alignedBoundingBox::~alignedBoundingBox()
 
 void alignedBoundingBox::makeGizmo()
 {
-	aie::Gizmos::add2DAABBFilled(m_position, m_extents * 0.5f, m_colour);
+	aie::Gizmos::add2DAABBFilled(m_position, m_extents * 0.5f, color);
 }
 
-bool alignedBoundingBox::checkCollision(PhysicsObject* pOther)
-{
-	return collision_manager::aabb_vs_circle(*this, (circle&)*pOther);
-}
+//bool alignedBoundingBox::checkCollision(PhysicsObject* pOther)
+//{
+//	return collision_manager::aabb_vs_circle(*this, pOther);
+//}
 
 const glm::vec2 alignedBoundingBox::getPosition() const
 {

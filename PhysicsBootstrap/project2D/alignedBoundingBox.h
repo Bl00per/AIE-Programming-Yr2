@@ -5,11 +5,11 @@ class alignedBoundingBox : public RigidBody
 {
 public:
 	alignedBoundingBox(const glm::vec2 a_position, glm::vec2 a_velocity, 
-		float a_mass, const glm::vec2 a_extents, const glm::vec4 a_colour);
+		const float a_mass, const glm::vec2 a_extents/*, const glm::vec4 a_colour*/);
 	~alignedBoundingBox();
 
 	virtual void makeGizmo();
-	virtual bool checkCollision(PhysicsObject* pOther);
+	virtual bool checkCollision(PhysicsObject* pOther) override { return false; }
 	virtual void debug() {}
 
 	const glm::vec2 getPosition() const;
@@ -24,10 +24,10 @@ public:
 	const glm::vec2 getMin() const;
 	const glm::vec2 getMax() const;
 
-	glm::vec4 getColour() { return m_colour; }
-
-protected:
-	glm::vec4 m_colour;
+//	glm::vec4 getColour() { return m_colour; }
+//
+//protected:
+//	glm::vec4 m_colour;
 
 private:
 	union

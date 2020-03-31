@@ -175,8 +175,8 @@
     <ClCompile Include="Application2D.cpp" />
     <ClCompile Include="Circle.cpp" />
     <ClCompile Include="collision_manager.cpp" />
+    <ClCompile Include="line.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="PhysicsObject.cpp" />
     <ClCompile Include="PhysicsScene.cpp" />
     <ClCompile Include="RigidBody.cpp" />
   </ItemGroup>
@@ -185,6 +185,7 @@
     <ClInclude Include="Application2D.h" />
     <ClInclude Include="Circle.h" />
     <ClInclude Include="collision_manager.h" />
+    <ClInclude Include="line.h" />
     <ClInclude Include="PhysicsObject.h" />
     <ClInclude Include="PhysicsScene.h" />
     <ClInclude Include="RigidBody.h" />

@@ -5,7 +5,7 @@ class circle : public RigidBody
 {
 public:
 
-	circle(glm::vec2 a_position, glm::vec2 a_velocity, float a_mass, float a_radius, const glm::vec4 a_colour);
+	circle(glm::vec2 a_position, glm::vec2 a_velocity, float a_mass, float a_radius/*, const glm::vec4 a_colour*/);
 	~circle();
 	//circle(const float a_radius, const glm::vec2& a_position = glm::vec2(0.0f));
 
