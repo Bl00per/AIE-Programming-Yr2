@@ -2,7 +2,7 @@
 #include "collision_manager.h"
 #include <cmath>
 
-alignedBoundingBox::alignedBoundingBox(const glm::vec2 a_position, glm::vec2 a_velocity, const float a_mass, const glm::vec2 a_extents/*, const glm::vec4 a_colour*/) :
+alignedBoundingBox::alignedBoundingBox(const glm::vec2 a_position, glm::vec2 a_velocity, const float a_mass, const glm::vec2 a_extents, const glm::vec4 a_colour) :
 	RigidBody(ShapeType::AABB, a_position, a_velocity, a_mass),
 	m_extents(a_extents)
 {}

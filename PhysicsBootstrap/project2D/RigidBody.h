@@ -32,6 +32,7 @@ protected:
 	glm::vec2 m_position;
 	glm::vec2 m_velocity;
 	float m_mass;
+	float drag = 0.1f;
 };
 
 #endif // !_RIGIDBODY_H_

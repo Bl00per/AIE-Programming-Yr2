@@ -3,6 +3,7 @@
 void RigidBody::fixedUpdate(glm::vec2 a_gravity, float a_timeStep)
 {
 	applyForce(a_gravity * m_mass * a_timeStep);
+	m_velocity -= m_velocity * drag * a_timeStep;
 	m_position += m_velocity * a_timeStep;
 }
 
@@ -33,9 +34,7 @@ void RigidBody::resolveCollision(RigidBody* a_other, glm::vec2 a_collisionNormal
 
 	glm::vec2 relativeVelocity = a_other->getVelocity() - m_velocity;
 
-	float elasticity = 1;
-
-	float j = glm::dot(-(1 + elasticity) * (relativeVelocity), normal) /
+	float j = glm::dot(-(1 + (elasticity * a_other->elasticity)) * (relativeVelocity), normal) /
 		glm::dot(normal, normal * ((1 / m_mass) + (1 / a_other->getMass())));
 
 	glm::vec2 force = normal * j;

@@ -8,9 +8,10 @@
 //{}
 
 
-circle::circle(glm::vec2 a_position, glm::vec2 a_velocity, float a_mass, float a_radius/*, const glm::vec4 a_colour*/) :
+circle::circle(glm::vec2 a_position, glm::vec2 a_velocity, float a_mass, float a_radius, const glm::vec4 a_colour) :
 	RigidBody(ShapeType::CIRCLE, a_position, a_velocity, a_mass),
-	m_radius(a_radius)
+	m_radius(a_radius),
+	m_colour(a_colour)
 {}
 
 circle::~circle()

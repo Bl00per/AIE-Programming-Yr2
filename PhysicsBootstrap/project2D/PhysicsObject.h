@@ -38,6 +38,8 @@ public:
 	{
 		return m_shapeID;
 	}
+
+	float elasticity = 0.8f;
 };
 
 #endif // !_PHYSICS_OBJECT_H_

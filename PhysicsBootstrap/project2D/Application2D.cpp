@@ -45,6 +45,7 @@ bool Application2D::startup()
 	box->setColour(glm::vec4(0.8f, 0.3f, 0.0f, 1.0f));
 
 	line* base = new line(glm::vec2(0, 1.0f), -8.0f);		// Base
+	line* base1 = new line(glm::vec2(0, -1.0f), -8.0f);		// // Roof
 	line* base2 = new line(glm::vec2(1.0f, 0.0f), -15.0f);	// Left Wall
 	line* base3 = new line(glm::vec2(1.0, 1.0f), -14.0f);	// Left Corner
 	line* base4 = new line(glm::vec2(-1.0f, 0.0f), -15.0f); // Right Wall
@@ -53,12 +54,9 @@ bool Application2D::startup()
 	m_physicsScene->addObject(star);
 	m_physicsScene->addObject(box);
 	m_physicsScene->addObject(earth);
-	//m_physicsScene->addObject(new alignedBoundingBox(glm::vec2(0.1f, -2.0f), glm::vec2(0.0f), 1.0f, glm::vec2(1.0f)));
-	//m_physicsScene->addObject(new alignedBoundingBox(glm::vec2(-100.0f, -2.0f), glm::vec2(0.0f), 1.0f, glm::vec2(1.0f)));
-	//m_physicsScene->addObject(new alignedBoundingBox(glm::vec2(-10.0f, -2.0f), glm::vec2(0.0f), 1.0f, glm::vec2(1.0f)));
-	//m_physicsScene->addObject(new alignedBoundingBox(glm::vec2(-20.0f, -2.0f), glm::vec2(0.0f), 1.0f, glm::vec2(1.0f)));
-	//m_physicsScene->addObject(new alignedBoundingBox(glm::vec2(-25.0f, -2.0f), glm::vec2(0.0f), 1.0f, glm::vec2(1.0f)));
+	m_physicsScene->addObject(new circle(glm::vec2(1.0f, 6.0f)));
 	m_physicsScene->addObject(base);
+	m_physicsScene->addObject(base1);
 	m_physicsScene->addObject(base2);
 	m_physicsScene->addObject(base3);
 	m_physicsScene->addObject(base4);
@@ -111,7 +109,7 @@ void Application2D::update(float deltaTime)
 		m_physicsScene->setGravity(glm::vec2(0.0f, -10.0f));
 		//box->applyForce(glm::vec2(10.0f));
 		star->applyForce(glm::vec2(-10.0f, 10.0f));
-		earth->applyForce(glm::vec2(10.0f, 10.0f));
+		earth->applyForce(glm::vec2(9.0f, 10.0f));
 	}
 
 	// exit the application

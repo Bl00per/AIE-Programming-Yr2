@@ -50,9 +50,7 @@ void line::resolveCollision(RigidBody* a_other)
 {
 	glm::vec2 relativeVelocity = a_other->getVelocity();
 
-	float elasticity = 1;
-
-	float j = glm::dot(-(1 + elasticity) * (relativeVelocity), m_normal) /
+	float j = glm::dot(-(1 + (elasticity * a_other->elasticity)) * (relativeVelocity), m_normal) /
 		glm::dot(m_normal, m_normal * (1 / a_other->getMass()));
 
 	glm::vec2 force = m_normal * j;
