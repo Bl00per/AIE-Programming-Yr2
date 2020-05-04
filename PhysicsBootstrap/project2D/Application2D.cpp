@@ -31,7 +31,7 @@ bool Application2D::startup()
 
 	m_2dRenderer = new aie::Renderer2D();
 
-	m_font = new aie::Font("./font/consolas.ttf", 32);
+	m_font = new aie::Font("./bin/font/consolas.ttf", 32);
 
 	m_physicsScene = new PhysicsScene();
 	m_physicsScene->setTimeStep(0.01f);
@@ -40,9 +40,15 @@ bool Application2D::startup()
 	star = new circle(glm::vec2(10.0f, 0.0f), glm::vec2(0.0f), 1.0f, 1.0f);
 	star->setColour(glm::vec4(1.0f, 1.0f, 0.0f, 1.0f));
 	earth = new circle(glm::vec2(-10.0f, 0.0f), glm::vec2(0.0f), 1.0f, 1.0f);
-	earth->setColour(glm::vec4(0, 0.5f, 1.0f, 1.0f));
-	box = new alignedBoundingBox(glm::vec2(0.0f, 0.0f), glm::vec2(0.0f), 1.0f, glm::vec2(1.0f));
+	earth->setColour(glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
+	box = new alignedBoundingBox(glm::vec2(0.0f, 0.0f), glm::vec2(0.0f), 1.0f, glm::vec2(2.0f));
 	box->setColour(glm::vec4(0.8f, 0.3f, 0.0f, 1.0f));
+	circle1 = new circle(glm::vec2(1.0f, 6.0f), glm::vec2(0.0f), 1.0f, 1.0f);
+	circle1->setColour(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+	circle2 = new circle(glm::vec2(1.0f, 5.0f), glm::vec2(0.0f), 1.0f, 1.0f);
+	circle2->setColour(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+	circle3 = new circle(glm::vec2(1.0f, 4.0f), glm::vec2(0.0f), 1.0f, 1.0f);
+	circle3->setColour(glm::vec4(0.8f, 0.0f, 0.8f, 1.0f));
 
 	line* base = new line(glm::vec2(0, 1.0f), -8.0f);		// Base
 	line* base1 = new line(glm::vec2(0, -1.0f), -8.0f);		// // Roof
@@ -52,9 +58,11 @@ bool Application2D::startup()
 	line* base5 = new line(glm::vec2(-1.0f, 1.0f), -14.0f); // Right Corner
 
 	m_physicsScene->addObject(star);
-	m_physicsScene->addObject(box);
+	//m_physicsScene->addObject(box);
 	m_physicsScene->addObject(earth);
-	m_physicsScene->addObject(new circle(glm::vec2(1.0f, 6.0f)));
+	m_physicsScene->addObject(circle1);
+	m_physicsScene->addObject(circle2);
+	m_physicsScene->addObject(circle3);
 	m_physicsScene->addObject(base);
 	m_physicsScene->addObject(base1);
 	m_physicsScene->addObject(base2);

@@ -29,6 +29,9 @@ protected:
 	circle* star;
 	circle* earth;
 	alignedBoundingBox* box;
+	circle* circle1;
+	circle* circle2;
+	circle* circle3;
 
 	float m_timer;
 };

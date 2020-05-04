@@ -126,7 +126,7 @@ glm::vec2 collision_manager::circle_vs_line(const PhysicsObject* a_circle, const
 
 	if (distance < 0.0f)
 	{
-		return l->getNormal();
+		return l->getNormal() * -distance;
 	}
 	else
 		return glm::vec2(0.0f);
